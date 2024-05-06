@@ -1,0 +1,8 @@
+[user]
+	name = Jakob Peters
+	email = jakobj.peters@gmail.com
+[core]
+	editor = hx
+	excludesfile = /home/jakob/.config/git/.gitignore
+[init]
+	defaultBranch = main

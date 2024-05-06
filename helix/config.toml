@@ -1,0 +1,29 @@
+theme = "onedark"
+
+[editor]
+scroll-lines = 4
+shell = ["nu", "-c"]
+cursorline = true
+bufferline = "always"
+text-width = 64
+
+[editor.statusline]
+left = ["mode"]
+center = ["primary-selection-length"]
+right = ["position"]
+
+[editor.statusline.mode]
+normal = "NORMAL"
+insert = "INSERT"
+select = "SELECT"
+
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.file-picker]
+hidden = false
+
+[editor.whitespace.render]
+space = "all"
+nbsp = "all"
+tab = "all"

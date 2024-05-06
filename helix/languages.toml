@@ -1,0 +1,11 @@
+
+[language-server.julia]
+args = [
+    "--project=~/.config/helix/LanguageServer.jl",
+    "--startup-file=no",
+    "--history-file=no",
+    "--quiet",
+    "-e",
+    "using LanguageServer: runserver; runserver()"
+]
+
