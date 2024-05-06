@@ -37,16 +37,19 @@ module Startup
             path = project().path
             activate(""; io = devnull)
             name = project().name
-            activate(path; io = devnull)
 
-            install(add, "Revise")
-            install(develop, name)
+            if !isnothing(name)
+                activate(path; io = devnull)
 
-            @eval using Revise: Revise
-            @eval Main using $(Symbol(name))
-            @eval toggle_precompile_workload() = toggle_precompile_workload($name)
+                install(add, "Revise")
+                install(develop, name)
 
-            name == "PAndQ" && install_atomize_mode()
+                @eval using Revise: Revise
+                @eval Main using $(Symbol(name))
+                @eval toggle_precompile_workload() = toggle_precompile_workload($name)
+
+                name == "PAndQ" && install_atomize_mode()
+            end
         end
     end
 end
