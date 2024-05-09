@@ -1,24 +1,55 @@
 
+"""
+    Startup
+
+A module loaded in startup.jl.
+
+- Print initialization message
+- Set the `"EDITOR"` and `"SHELL"` `ENV`ironment variables.
+- Define and run `Startup.bar_cursor`
+- Define `Startup.toggle_precompile_workload`
+- If current path has a Project.toml file, load Revise.jl and the project into the `Main` module
+    - If the project is PAndQ.jl, run `install_atomize_mode`
+- Load OhMyREPL.jl and TerminalPager.jl into the `Startup` module
+"""
 module Startup
     using Base: find_package
     using Pkg: activate, add, develop, project
 
-    install(obtain, name) = isnothing(find_package(name)) &&
-        (obtain == add ? add(name) : develop(; path = "."))
+    install(obtain, package) = isnothing(find_package(package)) &&
+        (obtain == add ? add(package) : develop(; path = "."))
 
-    install(add, "Preferences")
+    for package in ["Preferences", "OhMyREPL", "TerminalPager"]
+        install(add, package)
+    end
 
+    using OhMyREPL: OhMyREPL
     using Preferences: has_preference, load_preference, set_preferences!
+    using TerminalPager: TerminalPager
 
-    function toggle_precompile_workload(uuid_module)
-        state = has_preference(uuid_module, "precompile_workload") &&
-            !load_preference(uuid_module, "precompile_workload")
-        set_preferences!(uuid_module, "precompile_workload" => state; force = true)
-        @info "Precompile workload for `$uuid_module` is $(state ? "en" : "dis")abled"
+    """
+        bar_cursor()
+
+    Set the terminal cursor to a steady bar `|`.
+    """
+    bar_cursor() = print("\e[6 q")
+
+    """
+        toggle_precompile_workload(package)
+
+    Toggle whether the `package` runs its PrecompileTools.jl workload during precompilation.
+    """
+    function toggle_precompile_workload(package)
+        state = has_preference(package, "precompile_workload") &&
+            !load_preference(package, "precompile_workload")
+        set_preferences!(package, "precompile_workload" => state; force = true)
+        @info "Precompile workload for `$package` is $(state ? "en" : "dis")abled"
     end
 
     function __init__()
-        @info "`startup.jl` is running\e[6 q"
+        bar_cursor()
+
+        @info "startup.jl is running - see also `@doc Startup`"
 
         for (key, value) in [
             "JULIA_EDITOR" => "hx",
@@ -27,26 +58,26 @@ module Startup
             ENV[key] = value
         end
 
-        install(add, "OhMyREPL")
-        install(add, "TerminalPager")
-
-        @eval using OhMyREPL: OhMyREPL
-        @eval using TerminalPager: TerminalPager
-
         if isfile("Project.toml")
             path = project().path
             activate(""; io = devnull)
             name = project().name
+            activate(path; io = devnull)
 
             if !isnothing(name)
-                activate(path; io = devnull)
-
                 install(add, "Revise")
                 install(develop, name)
 
                 @eval using Revise: Revise
                 @eval Main using $(Symbol(name))
-                @eval toggle_precompile_workload() = toggle_precompile_workload($name)
+                @eval begin
+                    """
+                        toggle_precompile_workload()
+
+                    Equivalent to `toggle_precompile_workload($($name))`.
+                    """
+                    toggle_precompile_workload() = toggle_precompile_workload($name)
+                end
 
                 name == "PAndQ" && install_atomize_mode()
             end
