@@ -4,5 +4,6 @@
 [core]
 	editor = hx
 	excludesfile = /home/jakob/.config/git/.gitignore
+	autocrlf = input
 [init]
 	defaultBranch = main

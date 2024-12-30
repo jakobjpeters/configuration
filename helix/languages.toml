@@ -8,4 +8,3 @@ args = [
     "-e",
     "using LanguageServer: runserver; runserver()"
 ]
-

@@ -13,19 +13,10 @@ A module loaded in startup.jl.
 - Load OhMyREPL.jl and TerminalPager.jl into the `Startup` module
 """
 module Startup
+    import OhMyREPL, TerminalPager
     using Base: find_package
-    using Pkg: activate, add, develop, project
-
-    install(obtain, package) = isnothing(find_package(package)) &&
-        (obtain == add ? add(package) : develop(; path = "."))
-
-    for package in ["Preferences", "OhMyREPL", "TerminalPager"]
-        install(add, package)
-    end
-
-    using OhMyREPL: OhMyREPL
+    using Pkg: activate, develop, project
     using Preferences: has_preference, load_preference, set_preferences!
-    using TerminalPager: TerminalPager
 
     """
         bar_cursor()
@@ -53,24 +44,25 @@ module Startup
 
         for (key, value) in [
             "JULIA_EDITOR" => "hx",
-            "SHELL" => "bash"
+            "JULIA_PKG_SERVER_REGISTRY_PREFERENCE" => "eager",
+            "JULIA_SHELL" => "bash"
         ]
             ENV[key] = value
         end
 
         if isfile("Project.toml")
             path = project().path
+
             activate(""; io = devnull)
             name = project().name
             activate(path; io = devnull)
 
             if !isnothing(name)
-                install(add, "Revise")
-                install(develop, name)
+                isnothing(find_package(name)) && develop(; path = ".")
 
-                @eval using Revise: Revise
-                @eval Main using $(Symbol(name))
                 @eval begin
+                    import Revise
+
                     """
                         toggle_precompile_workload()
 
@@ -79,7 +71,16 @@ module Startup
                     toggle_precompile_workload() = toggle_precompile_workload($name)
                 end
 
-                name == "PAndQ" && install_atomize_mode()
+                @eval Main begin
+                    using $(Symbol(name))
+
+                    if $name == "PAndQ"
+                        install_atomize_mode()
+                        @eval @variables p q
+                    elseif $name == "Speculator"
+                        install_speculator(; limit = 4, verbosity = debug)
+                    end
+                end
             end
         end
     end

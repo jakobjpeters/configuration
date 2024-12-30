@@ -6,6 +6,12 @@ shell = ["nu", "-c"]
 cursorline = true
 bufferline = "always"
 text-width = 64
+completion-timeout = 5
+completion-trigger-len = 1
+rulers = [100]
+
+[editor.lsp]
+display-inlay-hints = true
 
 [editor.statusline]
 left = ["mode"]
