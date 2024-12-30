@@ -7,3 +7,5 @@
 	autocrlf = input
 [init]
 	defaultBranch = main
+[credential]
+	helper = store
