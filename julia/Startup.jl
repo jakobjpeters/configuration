@@ -14,16 +14,11 @@ A module loaded in startup.jl.
 """
 module Startup
     import OhMyREPL, TerminalPager
-    using Base: find_package
+    using Base: Threads.@spawn, find_package
     using Pkg: activate, develop, project
     using Preferences: has_preference, load_preference, set_preferences!
 
-    """
-        bar_cursor()
-
-    Set the terminal cursor to a steady bar `|`.
-    """
-    bar_cursor() = print("\e[6 q")
+    is_repl_ready() = isdefined(Base, :active_repl_backend) && !isnothing(Base.active_repl_backend)
 
     """
         toggle_precompile_workload(package)
@@ -38,8 +33,6 @@ module Startup
     end
 
     function __init__()
-        bar_cursor()
-
         @info "startup.jl is running - see also `@doc Startup`"
 
         for (key, value) in [
@@ -81,6 +74,19 @@ module Startup
                         install_speculator(; limit = 4, verbosity = debug)
                     end
                 end
+            end
+        end
+
+        @spawn begin
+            _time = time()
+
+            while !(repl_ready = is_repl_ready()) && time() - _time < 10
+                sleep(0.1)
+            end
+
+            if repl_ready
+                push!(Base.active_repl_backend.ast_transforms, x -> :(print("\e[6 q"); $x))
+            else error("Timed out waiting for REPL to load")
             end
         end
     end
