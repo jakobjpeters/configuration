@@ -13,9 +13,13 @@ A module loaded in startup.jl.
 - Load OhMyREPL.jl and TerminalPager.jl into the `Startup` module
 """
 module Startup
-    import OhMyREPL, TerminalPager
-    using Base: Threads.@spawn, find_package
+    using Base: Threads.@spawn, active_project, find_package
     using Pkg: activate, develop, project
+
+    const _active_project = active_project()
+    activate(@__DIR__; io = devnull)
+
+    import OhMyREPL, TerminalPager
     using Preferences: has_preference, load_preference, set_preferences!
 
     is_repl_ready() = isdefined(Base, :active_repl_backend) && !isnothing(Base.active_repl_backend)
@@ -76,6 +80,8 @@ module Startup
                 end
             end
         end
+
+        activate(_active_project; io = devnull)
 
         @spawn begin
             _time = time()
