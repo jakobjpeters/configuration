@@ -22,6 +22,16 @@ module Startup
     import OhMyREPL, TerminalPager
     using Preferences: has_preference, load_preference, set_preferences!
 
+    """
+        bar_cursor()
+
+    Set the terminal cursor to a steady bar `|`.
+    """
+    bar_cursor() = print("\e[6 q")
+
+    """
+        is_repl_ready()
+    """
     is_repl_ready() = isdefined(Base, :active_repl_backend) && !isnothing(Base.active_repl_backend)
 
     """
@@ -38,6 +48,8 @@ module Startup
 
     function __init__()
         @info "startup.jl is running - see also `@doc Startup`"
+
+        bar_cursor()
 
         for (key, value) in [
             "JULIA_EDITOR" => "hx",
@@ -91,7 +103,7 @@ module Startup
             end
 
             if repl_ready
-                push!(Base.active_repl_backend.ast_transforms, x -> :(print("\e[6 q"); $x))
+                push!(Base.active_repl_backend.ast_transforms, x -> :($bar_cursor(); $x))
             else error("Timed out waiting for REPL to load")
             end
         end
