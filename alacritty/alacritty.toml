@@ -1,8 +1,3 @@
-import = [
-    "/home/jakob/.config/alacritty/alacritty-theme/themes/blood_moon.toml"
-]
-
-shell = "nu"
 
 [window]
 decorations = "None"
@@ -18,3 +13,11 @@ size = 16
 
 [selection]
 save_to_clipboard = true
+
+[general]
+import = [
+    "~/.config/alacritty/alacritty-theme/themes/blood_moon.toml"
+]
+
+[terminal]
+shell = "nu"
