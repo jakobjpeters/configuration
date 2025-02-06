@@ -1,5 +1,4 @@
 
-$env.JULIA_NUM_THREADS = 'auto'
 $env.PROMPT_COMMAND_RIGHT = ""
 $env.PROMPT_COMMAND = {
     let directory = match (do --ignore-errors {
