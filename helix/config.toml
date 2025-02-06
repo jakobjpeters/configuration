@@ -5,13 +5,16 @@ scroll-lines = 4
 shell = ["nu", "-c"]
 cursorline = true
 bufferline = "always"
-text-width = 64
+text-width = 99
 completion-timeout = 5
 completion-trigger-len = 1
 rulers = [100]
 
 [editor.lsp]
 display-inlay-hints = true
+
+[editor.search]
+smart-case = false
 
 [editor.statusline]
 left = ["mode"]
@@ -32,4 +35,9 @@ hidden = false
 [editor.whitespace.render]
 space = "all"
 nbsp = "all"
+nnbsp = "all"
 tab = "all"
+
+[editor.soft-wrap]
+enable = true
+wrap-at-text-width = true
