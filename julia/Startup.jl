@@ -13,13 +13,9 @@ A module loaded in startup.jl.
 - Load OhMyREPL.jl and TerminalPager.jl into the `Startup` module
 """
 module Startup
-    using Base: Threads.@spawn, active_project, find_package
-    using Pkg: activate, develop, project
-
-    const _active_project = active_project()
-    activate(@__DIR__; io = devnull)
-
     import OhMyREPL, TerminalPager
+    using Base: Threads.@spawn, find_package
+    using Pkg: activate, develop, project
     using Preferences: has_preference, load_preference, set_preferences!
 
     """
@@ -40,8 +36,10 @@ module Startup
     Toggle whether the `package` runs its PrecompileTools.jl workload during precompilation.
     """
     function toggle_precompile_workload(package)
-        state = has_preference(package, "precompile_workload") &&
+        state = (
+            has_preference(package, "precompile_workload") &&
             !load_preference(package, "precompile_workload")
+        )
         set_preferences!(package, "precompile_workload" => state; force = true)
         @info "Precompile workload for `$package` is $(state ? "en" : "dis")abled"
     end
@@ -92,8 +90,6 @@ module Startup
                 end
             end
         end
-
-        activate(_active_project; io = devnull)
 
         @spawn begin
             _time = time()
