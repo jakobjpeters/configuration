@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Julia
+Comment=High-performance language for technical computing
+Exec=alacritty -e julia --banner=no
+Icon=julia
+Terminal=false
+Type=Application
+Categories=Development;
