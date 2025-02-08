@@ -1,5 +1,5 @@
 
-alias julia = julia --banner=no --threads=auto
+alias julia = julia --banner=no --depwarn=yes --threads=auto
 
 $env.config = {
     show_banner: false
