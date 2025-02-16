@@ -17,6 +17,7 @@ module Startup
     using Base: Threads.@spawn, find_package
     using Pkg: activate, develop, project
     using Preferences: has_preference, load_preference, set_preferences!
+    using REPL: REPLCompletions
 
     """
         bar_cursor()
@@ -56,6 +57,9 @@ module Startup
         ]
             ENV[key] = value
         end
+
+        # https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
+        @eval REPLCompletions close_path_completion(_, _, _, _) = false
 
         if isfile("Project.toml")
             path = project().path
