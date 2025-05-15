@@ -8,6 +8,7 @@ for program in [alacritty git nushell] {
     ln --force --symbolic $"programs/($program)/*" $path
 }
 
-# ln ../programs/alacritty/* ~/.config/alacritty/*
-# ln ../programs/git/* ~/.config/git/*
-# ln ../programs/nushell/* ~/.config/nushell/*
+# ln -sfn ((pwd) + /programs/julia) ~/.julia/config
+# ln -sfn ((pwd) + /programs/nushell) ~/.config/nushell
+# ln -sfn ((pwd) + /programs/git) ~/.config/git
+# ln -sfn ((pwd) + /assets/beautyline) ~/.local/share/icons
