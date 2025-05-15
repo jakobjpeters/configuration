@@ -1,6 +1,6 @@
 [submodule "beautyline"]
-	path = beautyline
+	path = assets/beautyline
 	url = https://gitlab.com/garuda-linux/themes-and-settings/artwork/beautyline.git
 [submodule "alacritty-theme"]
-	path = alacritty/alacritty-theme
+	path = programs/alacritty/alacritty-theme
 	url = https://github.com/alacritty/alacritty-theme.git
