@@ -15,9 +15,7 @@ size = 16
 save_to_clipboard = true
 
 [general]
-import = [
-    "~/.config/alacritty/alacritty-theme/themes/blood_moon.toml"
-]
+import = ["~/.config/alacritty/alacritty-theme/themes/blood_moon.toml"]
 
 [terminal]
 shell = "nu"
