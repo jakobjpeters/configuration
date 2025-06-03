@@ -11,6 +11,7 @@ using Base: Threads.@spawn, find_package
 using Pkg: activate, develop, project
 using Preferences: has_preference, load_preference, set_preferences!
 using REPL: REPLCompletions
+using Speculator: install_speculator
 
 """
     bar_cursor()
@@ -39,7 +40,8 @@ function toggle_precompile_workload(package)
 end
 
 """
-    BarCursor
+    BarCursor()
+    (::BarCursor)(::Any)
 """
 struct BarCursor end
 
@@ -49,6 +51,7 @@ function __init__()
     @info "`startup.jl` is running - see also `@doc Startup`"
 
     bar_cursor()
+    install_speculator(; limit = 2 ^ 8)
 
     for (key, value) in [
         "JULIA_EDITOR" => "hx",
@@ -62,7 +65,6 @@ function __init__()
     @eval REPLCompletions close_path_completion(_, _, _, _) = false
 
     if isfile("Project.toml")
-
         activate(""; io = devnull)
         name = project().name
 
@@ -86,8 +88,7 @@ function __init__()
                 if $name == "PAndQ"
                     install_atomize_mode()
                     @eval @variables p q
-                elseif $name == "Speculator"
-                    install_speculator(; limit = 4, verbosity = debug)
+                elseif $name == "Speculator" install_speculator(; limit = 2 ^ 8, verbosity = debug)
                 end
             end
         end
