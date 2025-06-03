@@ -1,8 +1,8 @@
 ; Identifiers
-(identifier) @variable
+; (identifier) @variable
 
 ; (field_expression
-  (identifier) @variable.member .)
+;   (identifier) @variable.member .)
 
 ; Symbols
 ; (quote_expression
@@ -28,7 +28,9 @@
     (identifier) @function.call .))
 
 ; Macros
-(macro_identifier) @function.macro
+(macro_identifier
+  "@" @function.macro
+  (_) @function.macro)
 
 (macro_definition
   (signature
@@ -214,8 +216,8 @@
 (import_alias
   "as" @keyword.import)
 
-(selected_import
-  ":" @punctuation.delimiter)
+; (selected_import
+;   ":" @punctuation.delimiter)
 
 (struct_definition
   [
@@ -254,12 +256,12 @@
   "."
   "..."
   "::"
-] @punctuation.special
+] @punctuation
 
-[
-  ","
-  ";"
-] @punctuation.delimiter
+; [
+;   ","
+  ; ";"
+; ] @punctuation.delimiter
 
 [
   "("
@@ -281,9 +283,9 @@
 ; ((identifier) @constant.builtin
 ;   (#any-of? @constant.builtin "nothing" "missing"))
 
-((identifier) @variable.builtin
-  (#any-of? @variable.builtin "begin" "end")
-  (#has-ancestor? @variable.builtin index_expression))
+; ((identifier) @variable.builtin
+;   (#any-of? @variable.builtin "begin" "end")
+;   (#has-ancestor? @variable.builtin index_expression))
 
 ; Literals
 (boolean_literal) @boolean

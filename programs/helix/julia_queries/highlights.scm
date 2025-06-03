@@ -1,18 +1,29 @@
 
-; ((string_literal) @comment.block.documentation
-;   .
-;   [
-;     (abstract_definition)
-;     (assignment)
-;     (const_statement)
-;     (function_definition)
-;     (macro_definition)
-;     (module_definition)
-;     (struct_definition)
-;   ])
+; combination
+
+(macrocall_expression
+  (macro_identifier "@" (identifier) @function.macro
+    (#eq? @function.macro "enum"))
+  (macro_argument_list
+    [
+      (identifier) @type.enum
+      (typed_expression (identifier) @type.enum "::" (_))
+    ]
+    [
+      (identifier) @type.enum.variant
+      (assignment (identifier) @type.enum.variant (operator) (_))
+      (assignment (juxtaposition_expression (identifier) @type.enum.variant))
+    ]
+  ))
+
+((prefixed_string_literal
+  (identifier) @function.macro) @string.regexp
+  (#eq? @function.macro "r"))
 
 ; attribute - Class attributes, HTML tag attributes
 
+; TODO: clean up
+; TODO: document & test
 ; type - Types
 ;     builtin - Primitive types provided by the language (int, usize)
 ;     parameter - Generic type parameters (T)
@@ -24,7 +35,7 @@
     (binary_expression (identifier) @type)
   ])
 (unary_typed_expression (identifier) @type)
-(typed_expression (identifier) @type)
+(typed_expression (_) "::" (identifier) @type)
 (where_expression
   [
     (identifier) @type
@@ -42,8 +53,10 @@
     (curly_expression
       [
         (identifier) @type.parameter
+        (field_expression (_) (identifier) @type)
         (unary_expression (identifier) @type)
       ])
+    (field_expression (_) "." (identifier) @type)
   ])
 ; TODO: use `Base`?
 ; println(join(map(name -> "\"$name\"", filter(name -> getproperty(Core, name) isa Type, names(Core))), ' '))
@@ -74,10 +87,10 @@
 (block_comment) @comment.block
 ; must match before `(string_literal) @string`
 ((string_literal) @comment.block.documentation
-  .
   [
     (abstract_definition)
     (assignment)
+    (compound_statement)
     (const_statement)
     (function_definition)
     (identifier)
@@ -109,9 +122,30 @@
 ;     other
 ;         member - Fields of composite data types (e.g. structs, unions)
 ;             private - Private fields that use a unique syntax (currently just ECMAScript-based languages)
-; (identifier) @variable
-; (field_expression
-;   (identifier) @variable.member .)
+; must be before `(identifier) @variable`
+(field_expression (_) (identifier) @variable.other.member)
+; must be before `(identifier) @variable`
+((identifier) @variable.builtin
+  (#any-of? @variable.builtin "begin" "end")
+  (#has-ancestor? @variable.builtin index_expression))
+; TODO: clean up
+; TODO: document & test
+(argument_list
+  [
+    (identifier) @variable.parameter
+    (named_argument
+      [
+        (identifier) @variable.parameter
+        (typed_expression (identifier) @variable.parameter)
+      ])
+    (typed_expression (identifier) @variable.parameter)
+    (tuple_expression
+      [
+        (identifier) @variable.parameter
+        (typed_expression (identifier) @variable.parameter)
+      ])
+  ])
+(identifier) @variable
 
 ; label
 
@@ -119,6 +153,19 @@
 ;     delimiter - Commas, colons
 ;     bracket - Parentheses, angle brackets, etc.
 ;     special - String interpolation brackets.
+(selected_import [":" ","] @punctuation.delimiter)
+(open_tuple "," @punctuation.delimiter)
+(let_statement "," @punctuation.delimiter)
+(for_clause "," @punctuation.delimiter)
+(for_statement "," @punctuation.delimiter)
+(export_statement "," @punctuation.delimiter)
+(public_statement "," @punctuation.delimiter)
+(vector_expression "," @punctuation.delimiter)
+(curly_expression "," @punctuation.delimiter)
+(argument_list ["," ";"] @punctuation.delimiter)
+(tuple_expression ["," ";"] @punctuation.delimiter)
+(parenthesized_expression ";" @punctuation.delimiter)
+(string_interpolation ["(" ")"] @punctuation.special)
 
 ; keyword
 ;     control
