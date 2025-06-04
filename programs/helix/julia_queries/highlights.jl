@@ -57,7 +57,19 @@ AbstractArray
 
 # constant
 
-## ((identifier) @constant.builtin (#any-of @constant.builtin "nothing" "undef"))
+## (boolean_literal) @constant.boolean
+true
+
+## (integer_literal) @constant.numeric.integer
+1
+
+## (float_literal) @constant.numeric.float
+1.0
+
+## (character_literal) @constant.character
+' '
+
+## ((identifier) @constant.builtin (#any-of @constant.builtin ...))
 nothing
 
 # comment
@@ -104,51 +116,17 @@ x
 
 # punctuation
 
-## (selected_import [":" ","] @punctuation.delimiter)
-using X: a, b,
-
-## (open_tuple "," @punctuation.delimiter)
-a, b
-
-## (let_statement "," @punctuation.delimiter)
-let a, b
-    1
-end
-
-## (for_statement "," @punctuation.delimiter)
-for a in 1, b in 2
-    3
-end
-
-## (export_statement "," @punctuation.delimiter)
-export a, b
-
-## (public_statement "," @punctuation.delimiter)
-public a, b
-
-## (for_statement "," @punctuation.delimiter)
-[1 for x in 1, y in 2]
-
-## (vector_expression "," @punctuation.delimiter)
-[1, 2,]
-
-## (curly_expression "," @punctuation.delimiter)
-T where {T, U,}
-
-## (argument_list "," @punctuation.delimiter)
-f(1, 2,)
-
-## (argument_list ";" @punctuation.delimiter)
-f(;)
-
-## (tuple_expression "," @punctuation.delimiter)
-(1, 2,)
-
-## (tuple_expression ";" @punctuation.delimiter)
+## ["," ";"] @punctuation.delimiter
 (;)
 
-## (parenthesized_expression ";" @punctuation.delimiter)
-(1; 2;)
+## (selected_import ":" @punctuation.delimiter)
+using Base: Int
 
-## (string_interpolation ["(", ")"] @punctuation.special)
+## ["(" ")" "[" "]" "{" "}"] @punctuation.bracket
+[]
+
+## (string_interpolation ["(" ")"] @punctuation.special)
 "$(x)"
+
+# keyword
+

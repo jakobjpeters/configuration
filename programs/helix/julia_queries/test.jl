@@ -1,8 +1,16 @@
 
 # tree-sitter error
-"""
-- x
-""" x
+# let a, b end
+
+# (;;)
+
+# mutable struct X
+#     const x::Int
+# end
+
+# """
+# - x
+# """ x
 
 # tree-sitter error
 # "- x" x

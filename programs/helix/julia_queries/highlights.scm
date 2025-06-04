@@ -58,11 +58,9 @@
       ])
     (field_expression (_) "." (identifier) @type)
   ])
-; TODO: use `Base`?
-; println(join(map(name -> "\"$name\"", filter(name -> getproperty(Core, name) isa Type, names(Core))), ' '))
-((identifier) @type.builtin
-  (#any-of? @type.builtin
-    "AbstractArray" "AbstractChar" "AbstractFloat" "AbstractString" "Any" "ArgumentError" "Array" "AssertionError" "AtomicMemory" "AtomicMemoryRef" "Bool" "BoundsError" "Char" "ConcurrencyViolationError" "Cvoid" "DataType" "DenseArray" "DivideError" "DomainError" "ErrorException" "Exception" "Expr" "Float16" "Float32" "Float64" "Function" "GenericMemory" "GenericMemoryRef" "GlobalRef" "IO" "InexactError" "InitError" "Int" "Int128" "Int16" "Int32" "Int64" "Int8" "Integer" "InterruptException" "LineNumberNode" "LoadError" "Memory" "MemoryRef" "Method" "MethodError" "Module" "NTuple" "NamedTuple" "Nothing" "Number" "OutOfMemoryError" "OverflowError" "Pair" "Ptr" "QuoteNode" "ReadOnlyMemoryError" "Real" "Ref" "SegmentationFault" "Signed" "StackOverflowError" "String" "Symbol" "Task" "Tuple" "Type" "TypeError" "TypeVar" "UInt" "UInt128" "UInt16" "UInt32" "UInt64" "UInt8" "UndefInitializer" "UndefKeywordError" "UndefRefError" "UndefVarError" "Union" "UnionAll" "Unsigned" "VecElement" "WeakRef"))
+; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> getproperty(_module, name) isa Type && name != :(=>), names(_module)), [Base, Core]))), ' '))
+((identifier) @type.builtin (#any-of? @type.builtin
+  "AbstractChannel" "AbstractDict" "AbstractDisplay" "AbstractIrrational" "AbstractLock" "AbstractMatch" "AbstractMatrix" "AbstractPattern" "AbstractPipe" "AbstractRange" "AbstractSet" "AbstractSlices" "AbstractUnitRange" "AbstractVecOrMat" "AbstractVector" "Array" "AsyncCondition" "BigFloat" "BigInt" "BitArray" "BitMatrix" "BitSet" "BitVector" "BufferStream" "CanonicalIndexError" "CapturedException" "CartesianIndex" "CartesianIndices" "Cchar" "Cdouble" "Cfloat" "Channel" "Cint" "Cintmax_t" "Clong" "Clonglong" "Cmd" "CodeUnits" "Colon" "ColumnSlices" "Complex" "ComplexF16" "ComplexF32" "ComplexF64" "ComposedFunction" "CompositeException" "Condition" "Cptrdiff_t" "Cshort" "Csize_t" "Cssize_t" "Cstring" "Cuchar" "Cuint" "Cuintmax_t" "Culong" "Culonglong" "Cushort" "Cwchar_t" "Cwstring" "DenseMatrix" "DenseVecOrMat" "DenseVector" "Dict" "DimensionMismatch" "Dims" "EOFError" "Enum" "Event" "ExponentialBackOff" "Fix1" "Fix2" "Generator" "HTML" "IOBuffer" "IOContext" "IOServer" "IOStream" "IdDict" "IdSet" "ImmutableDict" "IndexCartesian" "IndexLinear" "IndexStyle" "InvalidStateException" "Irrational" "IteratorEltype" "IteratorSize" "KeyError" "LazyString" "LinRange" "LinearIndices" "Lockable" "LogRange" "MIME" "Matrix" "Missing" "MissingException" "NTuple" "OS_HANDLE" "OneTo" "OrdinalRange" "Pair" "PartialQuickSort" "PermutedDimsArray" "Pipe" "PipeEndpoint" "ProcessFailedException" "Rational" "RawFD" "ReentrantLock" "Regex" "RegexMatch" "Returns" "RoundingMode" "RowSlices" "Semaphore" "Set" "Slices" "Some" "StepRange" "StepRangeLen" "StridedArray" "StridedMatrix" "StridedVecOrMat" "StridedVector" "StringIndexError" "SubArray" "SubString" "SubstitutionString" "SystemError" "TTY" "TaskFailedException" "Text" "TextDisplay" "Timer" "UUID" "UnitRange" "Val" "VecOrMat" "Vector" "VersionNumber" "WeakKeyDict" "AbstractArray" "AbstractChar" "AbstractFloat" "AbstractString" "Any" "ArgumentError" "AssertionError" "AtomicMemory" "AtomicMemoryRef" "Bool" "BoundsError" "Char" "ConcurrencyViolationError" "Cvoid" "DataType" "DenseArray" "DivideError" "DomainError" "ErrorException" "Exception" "Expr" "Float16" "Float32" "Float64" "Function" "GenericMemory" "GenericMemoryRef" "GlobalRef" "IO" "InexactError" "InitError" "Int" "Int128" "Int16" "Int32" "Int64" "Int8" "Integer" "InterruptException" "LineNumberNode" "LoadError" "Memory" "MemoryRef" "Method" "MethodError" "Module" "NamedTuple" "Nothing" "Number" "OutOfMemoryError" "OverflowError" "Ptr" "QuoteNode" "ReadOnlyMemoryError" "Real" "Ref" "SegmentationFault" "Signed" "StackOverflowError" "String" "Symbol" "Task" "Tuple" "Type" "TypeError" "TypeVar" "UInt" "UInt128" "UInt16" "UInt32" "UInt64" "UInt8" "UndefInitializer" "UndefKeywordError" "UndefRefError" "UndefVarError" "Union" "UnionAll" "Unsigned" "VecElement" "WeakRef"))
 
 ; constructor
 
@@ -74,10 +72,14 @@
 ;     numeric (numbers)
 ;         integer
 ;         float
-; TODO: use `Base`?
-; println(join(map(name -> "\"$name\"", filter(name -> isconst(Core, name) && !(getproperty(Core, name) isa Union{Function, Module, Type} || name == :Vararg), names(Core))), ' '))
-((identifier) @constant.builtin
-  (#any-of? @constant.builtin "nothing" "undef"))
+(boolean_literal) @constant.builtin.boolean
+(integer_literal) @constant.numeric.integer
+(float_literal) @constant.numeric.float
+(character_literal) @constant.character
+; TODO: make numbers a `@constanct.numeric`?
+; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Type, Module}), names(_module)), [Base, Core]))), ' '))
+((identifier) @constant.builtin (#any-of? @constant.builtin
+  "ARGS" "C_NULL" "DEPOT_PATH" "DL_LOAD_PATH" "ENDIAN_BOM" "ENV" "Inf" "Inf16" "Inf32" "Inf64" "InsertionSort" "LOAD_PATH" "MergeSort" "NaN" "NaN16" "NaN32" "NaN64" "QuickSort" "RoundDown" "RoundFromZero" "RoundNearest" "RoundNearestTiesAway" "RoundNearestTiesUp" "RoundToZero" "RoundUp" "VERSION" "devnull" "im" "missing" "pi" "text_colors" "π" "ℯ" "Vararg" "nothing" "undef"))
 
 ; comment - Code comments
 ;     line - Single line comments (//)
@@ -111,10 +113,7 @@
 (command_literal) @string.special
 (quote_expression
   ":" @string.special.symbol
-  [
-    (identifier)
-    (operator)
-  ] @string.special.symbol)
+  [(identifier) (operator)] @string.special.symbol)
 
 ; variable - Variables
 ;     builtin - Reserved language variables (self, this, super, etc.)
@@ -153,19 +152,11 @@
 ;     delimiter - Commas, colons
 ;     bracket - Parentheses, angle brackets, etc.
 ;     special - String interpolation brackets.
-(selected_import [":" ","] @punctuation.delimiter)
-(open_tuple "," @punctuation.delimiter)
-(let_statement "," @punctuation.delimiter)
-(for_clause "," @punctuation.delimiter)
-(for_statement "," @punctuation.delimiter)
-(export_statement "," @punctuation.delimiter)
-(public_statement "," @punctuation.delimiter)
-(vector_expression "," @punctuation.delimiter)
-(curly_expression "," @punctuation.delimiter)
-(argument_list ["," ";"] @punctuation.delimiter)
-(tuple_expression ["," ";"] @punctuation.delimiter)
-(parenthesized_expression ";" @punctuation.delimiter)
+["," ";"] @punctuation.delimiter
+(selected_import ":" @punctuation.delimiter)
+; must be before `["(" ")" "[" "]" "{" "}"] @punctuation.bracket`
 (string_interpolation ["(" ")"] @punctuation.special)
+["(" ")" "[" "]" "{" "}"] @punctuation.bracket
 
 ; keyword
 ;     control
@@ -180,6 +171,41 @@
 ;     storage - Keywords describing how things are stored
 ;         type - The type of something, class, function, var, let, etc.
 ;         modifier - Storage modifiers like static, mut, const, ref, etc.
+(if_statement ["if" "end"] @keyword.control.conditional)
+(elseif_clause "elseif" @keyword.control.conditional)
+(else_clause "else" @keyword.control.conditional)
+(ternary_expression ["?" ":"] @keyword.control.conditional)
+(if_clause "if" @keyword.conditional)
+(for_statement ["for" "end"] @keyword.repeat)
+(for_binding "outer" @keyword.repeat)
+(for_clause "for" @keyword.repeat)
+(while_statement ["while" "end"] @keyword.repeat)
+[(break_statement) (continue_statement)] @keyword.repeat
+(module_definition ["module" "baremodule" "end"] @keyword.import)
+(export_statement "export" @keyword.import)
+(public_statement "public" @keyword.import)
+(import_statement "import" @keyword.import)
+(using_statement "using" @keyword.import)
+(import_alias "as" @keyword.import)
+(return_statement "return" @keyword.return)
+(try_statement ["try" "end"] @keyword.exception)
+(catch_clause "catch" @keyword.exception)
+(finally_clause "finally" @keyword.exception)
+(for_binding (operator) @keyword.operator)
+(where_expression "where" @keyword.operator)
+(function_definition ["function" "end"] @keyword.function)
+(do_clause ["do" "end"] @keyword.function)
+(arrow_function_expression "->" @keyword.function)
+(abstract_definition ["abstract" "type"] @keyword.storage.type)
+(primitive_definition ["primitive" "type"] @keyword.storage.type)
+(struct_definition "mutable" @keyword.storage.type)
+(local_statement "local" @keyword.storage.modifier)
+(const_statement "const" @keyword.storage.modifier)
+(let_statement ["let" "end"] @keyword)
+(compound_statement ["begin" "end"] @keyword)
+(quote_statement ["quote" "end"] @keyword)
+(quote_expression ":" @keyword)
+(macro_definition ["macro" "end"] @keyword)
 
 ; operator - ||, +=, >
 

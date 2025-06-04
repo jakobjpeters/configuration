@@ -92,153 +92,153 @@
 ;     "UndefRefError" "UndefVarError" "Union" "UnionAll" "Unsigned" "VecElement" "WeakRef"))
 
 ; Keywords
-[
-  "const"
-  "global"
-  "local"
-] @keyword
+; [
+;   "const"
+;   "global"
+;   "local"
+; ] @keyword
 
-(compound_statement
-  [
-    "begin"
-    "end"
-  ] @keyword)
+; (compound_statement
+;   [
+;     "begin"
+;     "end"
+;   ] @keyword)
 
-(quote_statement
-  [
-    "quote"
-    "end"
-  ] @keyword)
+; (quote_statement
+;   [
+;     "quote"
+;     "end"
+;   ] @keyword)
 
-(let_statement
-  [
-    "let"
-    "end"
-  ] @keyword)
+; (let_statement
+;   [
+;     "let"
+;     "end"
+;   ] @keyword)
 
-(if_statement
-  [
-    "if"
-    "end"
-  ] @keyword.conditional)
+; (if_statement
+;   [
+;     "if"
+;     "end"
+;   ] @keyword.conditional)
 
-(elseif_clause
-  "elseif" @keyword.conditional)
+; (elseif_clause
+;   "elseif" @keyword.conditional)
 
-(else_clause
-  "else" @keyword.conditional)
+; (else_clause
+;   "else" @keyword.conditional)
 
-(ternary_expression
-  [
-    "?"
-    ":"
-  ] @keyword.conditional.ternary)
+; (ternary_expression
+;   [
+;     "?"
+;     ":"
+;   ] @keyword.conditional.ternary)
 
-(try_statement
-  [
-    "try"
-    "end"
-  ] @keyword.exception)
+; (try_statement
+;   [
+;     "try"
+;     "end"
+;   ] @keyword.exception)
 
-(catch_clause
-  "catch" @keyword.exception)
+; (catch_clause
+;   "catch" @keyword.exception)
 
-(finally_clause
-  "finally" @keyword.exception)
+; (finally_clause
+;   "finally" @keyword.exception)
 
-(for_statement
-  [
-    "for"
-    "end"
-  ] @keyword.repeat)
+; (for_statement
+;   [
+;     "for"
+;     "end"
+;   ] @keyword.repeat)
 
-(for_binding
-  "outer" @keyword.repeat)
+; (for_binding
+;   "outer" @keyword.repeat)
 
-; comprehensions
-(for_clause
-  "for" @keyword.repeat)
+; ; comprehensions
+; (for_clause
+;   "for" @keyword.repeat)
 
-(if_clause
-  "if" @keyword.conditional)
+; (if_clause
+;   "if" @keyword.conditional)
 
-(while_statement
-  [
-    "while"
-    "end"
-  ] @keyword.repeat)
+; (while_statement
+;   [
+;     "while"
+;     "end"
+;   ] @keyword.repeat)
 
-[
-  (break_statement)
-  (continue_statement)
-] @keyword.repeat
+; [
+;   (break_statement)
+;   (continue_statement)
+; ] @keyword.repeat
 
-(function_definition
-  [
-    "function"
-    "end"
-  ] @keyword.function)
+; (function_definition
+;   [
+;     "function"
+;     "end"
+;   ] @keyword.function)
 
-(do_clause
-  [
-    "do"
-    "end"
-  ] @keyword.function)
+; (do_clause
+;   [
+;     "do"
+;     "end"
+;   ] @keyword.function)
 
-(macro_definition
-  [
-    "macro"
-    "end"
-  ] @keyword)
+; (macro_definition
+;   [
+;     "macro"
+;     "end"
+;   ] @keyword)
 
-(return_statement
-  "return" @keyword.return)
+; (return_statement
+;   "return" @keyword.return)
 
-(module_definition
-  [
-    "module"
-    "baremodule"
-    "end"
-  ] @keyword.import)
+; (module_definition
+;   [
+;     "module"
+;     "baremodule"
+;     "end"
+;   ] @keyword.import)
 
-(export_statement
-  "export" @keyword.import)
+; (export_statement
+;   "export" @keyword.import)
 
-(public_statement
-  "public" @keyword.import)
+; (public_statement
+;   "public" @keyword.import)
 
-(import_statement
-  "import" @keyword.import)
+; (import_statement
+;   "import" @keyword.import)
 
-(using_statement
-  "using" @keyword.import)
+; (using_statement
+;   "using" @keyword.import)
 
-(import_alias
-  "as" @keyword.import)
+; (import_alias
+;   "as" @keyword.import)
 
 ; (selected_import
 ;   ":" @punctuation.delimiter)
 
-(struct_definition
-  [
-    "mutable"
-    "struct"
-    "end"
-  ] @keyword.type)
+; (struct_definition
+;   [
+;     "mutable"
+;     "struct"
+;     "end"
+;   ] @keyword.type)
 
-(abstract_definition
-  [
-    "abstract"
-    "type"
-    "end"
-  ] @keyword.type)
+; (abstract_definition
+;   [
+;     "abstract"
+;     "type"
+;     "end"
+;   ] @keyword.type)
 
-(primitive_definition
-  [
-    "primitive"
-    "type"
-    "end"
-  ] @keyword.type)
+; (primitive_definition
+;   [
+;     "primitive"
+;     "type"
+;     "end"
+;   ] @keyword.type)
 
 ; Operators & Punctuation
 (operator) @operator
@@ -263,21 +263,21 @@
   ; ";"
 ; ] @punctuation.delimiter
 
-[
-  "("
-  ")"
-  "["
-  "]"
-  "{"
-  "}"
-] @punctuation.bracket
+; [
+;   "("
+;   ")"
+;   "["
+;   "]"
+;   "{"
+;   "}"
+; ] @punctuation.bracket
 
 ; Keyword operators
-((operator) @keyword.operator
-  (#any-of? @keyword.operator "in" "isa"))
+; ((operator) @keyword.operator
+;   (#any-of? @keyword.operator "in" "isa"))
 
-(where_expression
-  "where" @keyword.operator)
+; (where_expression
+;   "where" @keyword.operator)
 
 ; Built-in constants
 ; ((identifier) @constant.builtin
@@ -288,16 +288,16 @@
 ;   (#has-ancestor? @variable.builtin index_expression))
 
 ; Literals
-(boolean_literal) @boolean
+; (boolean_literal) @boolean
 
-(integer_literal) @number
+; (integer_literal) @number
 
-(float_literal) @number.float
+; (float_literal) @number.float
 
 ((identifier) @number.float
   (#any-of? @number.float "NaN" "NaN16" "NaN32" "Inf" "Inf16" "Inf32"))
 
-(character_literal) @character
+; (character_literal) @character
 
 ; (escape_sequence) @string.escape
 
