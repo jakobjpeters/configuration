@@ -1,24 +1,12 @@
 
-; combination
-
-(macrocall_expression
-  (macro_identifier "@" (identifier) @function.macro
-    (#eq? @function.macro "enum"))
-  (macro_argument_list
-    [
-      (identifier) @type.enum
-      (typed_expression (identifier) @type.enum "::" (_))
-    ]
-    [
-      (identifier) @type.enum.variant
-      (assignment (identifier) @type.enum.variant (operator) (_))
-      (assignment (juxtaposition_expression (identifier) @type.enum.variant))
-    ]
-  ))
-
-((prefixed_string_literal
-  (identifier) @function.macro) @string.regexp
-  (#eq? @function.macro "r"))
+; TODO: context-dependent symbols
+; `::` as an `@operator` vs `@keyword.function`
+; `const` as a `@keyword.storage.modifier` vs `@keyword.storage.type`
+; `["in" "∈"] as a `@keyword.operator` vs `@operator`
+; `=` as `@keyword.operator` vs `@operator` vs `@keyword.storage`
+; `:` as an `@operator` vs `@keyword.control.conditional` vs `@string.special.symbol` vs `@keyword`
+; `$` as an `@operator` vs `@keyword`
+; `["begin" "end"]` as a `@keyword` vs `@variable.builtin`
 
 ; attribute - Class attributes, HTML tag attributes
 
@@ -58,6 +46,20 @@
       ])
     (field_expression (_) "." (identifier) @type)
   ])
+(macrocall_expression
+  (macro_identifier "@" (identifier) @enum
+    (#eq? @enum "enum"))
+  (macro_argument_list
+    [
+      (identifier) @type.enum
+      (typed_expression (identifier) @type.enum "::" (_))
+    ]
+    [
+      (identifier) @type.enum.variant
+      (assignment (identifier) @type.enum.variant (operator) (_))
+      (assignment (juxtaposition_expression (identifier) @type.enum.variant))
+    ]
+  ))
 ; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> getproperty(_module, name) isa Type && name != :(=>), names(_module)), [Base, Core]))), ' '))
 ((identifier) @type.builtin (#any-of? @type.builtin
   "AbstractChannel" "AbstractDict" "AbstractDisplay" "AbstractIrrational" "AbstractLock" "AbstractMatch" "AbstractMatrix" "AbstractPattern" "AbstractPipe" "AbstractRange" "AbstractSet" "AbstractSlices" "AbstractUnitRange" "AbstractVecOrMat" "AbstractVector" "Array" "AsyncCondition" "BigFloat" "BigInt" "BitArray" "BitMatrix" "BitSet" "BitVector" "BufferStream" "CanonicalIndexError" "CapturedException" "CartesianIndex" "CartesianIndices" "Cchar" "Cdouble" "Cfloat" "Channel" "Cint" "Cintmax_t" "Clong" "Clonglong" "Cmd" "CodeUnits" "Colon" "ColumnSlices" "Complex" "ComplexF16" "ComplexF32" "ComplexF64" "ComposedFunction" "CompositeException" "Condition" "Cptrdiff_t" "Cshort" "Csize_t" "Cssize_t" "Cstring" "Cuchar" "Cuint" "Cuintmax_t" "Culong" "Culonglong" "Cushort" "Cwchar_t" "Cwstring" "DenseMatrix" "DenseVecOrMat" "DenseVector" "Dict" "DimensionMismatch" "Dims" "EOFError" "Enum" "Event" "ExponentialBackOff" "Fix1" "Fix2" "Generator" "HTML" "IOBuffer" "IOContext" "IOServer" "IOStream" "IdDict" "IdSet" "ImmutableDict" "IndexCartesian" "IndexLinear" "IndexStyle" "InvalidStateException" "Irrational" "IteratorEltype" "IteratorSize" "KeyError" "LazyString" "LinRange" "LinearIndices" "Lockable" "LogRange" "MIME" "Matrix" "Missing" "MissingException" "NTuple" "OS_HANDLE" "OneTo" "OrdinalRange" "Pair" "PartialQuickSort" "PermutedDimsArray" "Pipe" "PipeEndpoint" "ProcessFailedException" "Rational" "RawFD" "ReentrantLock" "Regex" "RegexMatch" "Returns" "RoundingMode" "RowSlices" "Semaphore" "Set" "Slices" "Some" "StepRange" "StepRangeLen" "StridedArray" "StridedMatrix" "StridedVecOrMat" "StridedVector" "StringIndexError" "SubArray" "SubString" "SubstitutionString" "SystemError" "TTY" "TaskFailedException" "Text" "TextDisplay" "Timer" "UUID" "UnitRange" "Val" "VecOrMat" "Vector" "VersionNumber" "WeakKeyDict" "AbstractArray" "AbstractChar" "AbstractFloat" "AbstractString" "Any" "ArgumentError" "AssertionError" "AtomicMemory" "AtomicMemoryRef" "Bool" "BoundsError" "Char" "ConcurrencyViolationError" "Cvoid" "DataType" "DenseArray" "DivideError" "DomainError" "ErrorException" "Exception" "Expr" "Float16" "Float32" "Float64" "Function" "GenericMemory" "GenericMemoryRef" "GlobalRef" "IO" "InexactError" "InitError" "Int" "Int128" "Int16" "Int32" "Int64" "Int8" "Integer" "InterruptException" "LineNumberNode" "LoadError" "Memory" "MemoryRef" "Method" "MethodError" "Module" "NamedTuple" "Nothing" "Number" "OutOfMemoryError" "OverflowError" "Ptr" "QuoteNode" "ReadOnlyMemoryError" "Real" "Ref" "SegmentationFault" "Signed" "StackOverflowError" "String" "Symbol" "Task" "Tuple" "Type" "TypeError" "TypeVar" "UInt" "UInt128" "UInt16" "UInt32" "UInt64" "UInt8" "UndefInitializer" "UndefKeywordError" "UndefRefError" "UndefVarError" "Union" "UnionAll" "Unsigned" "VecElement" "WeakRef"))
@@ -75,6 +77,7 @@
 (boolean_literal) @constant.builtin.boolean
 (integer_literal) @constant.numeric.integer
 (float_literal) @constant.numeric.float
+; TODO: `@constant.character.escape`
 (character_literal) @constant.character
 ; TODO: make numbers a `@constanct.numeric`?
 ; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Type, Module}), names(_module)), [Base, Core]))), ' '))
@@ -88,19 +91,18 @@
 (line_comment) @comment.line
 (block_comment) @comment.block
 ; must match before `(string_literal) @string`
-((string_literal) @comment.block.documentation
-  [
-    (abstract_definition)
-    (assignment)
-    (compound_statement)
-    (const_statement)
-    (function_definition)
-    (identifier)
-    (macro_definition)
-    (module_definition)
-    (primitive_definition)
-    (struct_definition)
-  ])
+(source_file (string_literal) @comment.block.documentation)
+(module_definition (string_literal) @comment.block.documentation)
+(macrocall_expression
+  (macro_identifier "@" (identifier) @doc
+    (#eq? @doc "doc"))
+  (macro_argument_list
+    [
+      (string_literal)
+      (prefixed_string_literal
+        (identifier) @md (#eq? @md "md"))
+    ] @comment.block.documentation
+    (_)))
 
 ; string (TODO: string.quoted.{single, double}, string.raw/.unquoted)?
 ;     regexp - Regular expressions
@@ -109,6 +111,9 @@
 ;         url
 ;         symbol - Erlang/Elixir atoms, Ruby symbols, Clojure keywords
 (string_literal) @string
+((prefixed_string_literal
+  (identifier) @r) @string.regexp
+  (#eq? @r "r"))
 (escape_sequence) @string.escape
 (command_literal) @string.special
 (quote_expression
@@ -175,30 +180,30 @@
 (elseif_clause "elseif" @keyword.control.conditional)
 (else_clause "else" @keyword.control.conditional)
 (ternary_expression ["?" ":"] @keyword.control.conditional)
-(if_clause "if" @keyword.conditional)
-(for_statement ["for" "end"] @keyword.repeat)
-(for_binding "outer" @keyword.repeat)
-(for_clause "for" @keyword.repeat)
-(while_statement ["while" "end"] @keyword.repeat)
-[(break_statement) (continue_statement)] @keyword.repeat
-(module_definition ["module" "baremodule" "end"] @keyword.import)
-(export_statement "export" @keyword.import)
-(public_statement "public" @keyword.import)
-(import_statement "import" @keyword.import)
-(using_statement "using" @keyword.import)
-(import_alias "as" @keyword.import)
-(return_statement "return" @keyword.return)
-(try_statement ["try" "end"] @keyword.exception)
-(catch_clause "catch" @keyword.exception)
-(finally_clause "finally" @keyword.exception)
+(if_clause "if" @keyword.control.conditional)
+(for_statement ["for" "end"] @keyword.control.repeat)
+(for_binding "outer" @keyword.control.repeat)
+(for_clause "for" @keyword.control.repeat)
+(while_statement ["while" "end"] @keyword.control.repeat)
+[(break_statement) (continue_statement)] @keyword.control.repeat
+(module_definition ["module" "baremodule" "end"] @keyword.control.import)
+(export_statement "export" @keyword.control.import)
+(public_statement "public" @keyword.control.import)
+(import_statement "import" @keyword.control.import)
+(using_statement "using" @keyword.control.import)
+(import_alias "as" @keyword.control.import)
+(return_statement "return" @keyword.control.return)
+(try_statement ["try" "end"] @keyword.control.exception)
+(catch_clause "catch" @keyword.control.exception)
+(finally_clause "finally" @keyword.control.exception)
 (for_binding (operator) @keyword.operator)
 (where_expression "where" @keyword.operator)
 (function_definition ["function" "end"] @keyword.function)
 (do_clause ["do" "end"] @keyword.function)
 (arrow_function_expression "->" @keyword.function)
-(abstract_definition ["abstract" "type"] @keyword.storage.type)
-(primitive_definition ["primitive" "type"] @keyword.storage.type)
-(struct_definition "mutable" @keyword.storage.type)
+(abstract_definition ["abstract" "type" "end"] @keyword.storage.type)
+(primitive_definition ["primitive" "type" "end"] @keyword.storage.type)
+(struct_definition ["mutable" "struct" "end"] @keyword.storage.type)
 (local_statement "local" @keyword.storage.modifier)
 (const_statement "const" @keyword.storage.modifier)
 (let_statement ["let" "end"] @keyword)
@@ -208,6 +213,15 @@
 (macro_definition ["macro" "end"] @keyword)
 
 ; operator - ||, +=, >
+(operator) @operator
+(adjoint_expression "'" @operator)
+(range_expression ":" @operator)
+(field_expression "." @operator)
+(splat_expression "..." @operator)
+(typed_expression "::" @operator)
+(unary_typed_expression "::" @operator)
+(interpolation_expression "$" @operator)
+(string_interpolation "$" @operator)
 
 ; function
 ;     builtin

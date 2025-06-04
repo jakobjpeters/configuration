@@ -68,13 +68,13 @@
 ; (where_expression
 ;   (_) @type .)
 
-(binary_expression
-  ; (_) @type
-  (_)
-  (operator) @operator
-  ; (_) @type
-  (_)
-  (#any-of? @operator "<:" ">:"))
+; (binary_expression
+;   ; (_) @type
+;   (_)
+;   (operator) @operator
+;   ; (_) @type
+;   (_)
+;   (#any-of? @operator "<:" ">:"))
 
 ; Built-in types
 ; filter(name -> typeof(Base.eval(Core, name)) in [DataType, UnionAll], names(Core))
@@ -241,16 +241,16 @@
 ;   ] @keyword.type)
 
 ; Operators & Punctuation
-(operator) @operator
+; (operator) @operator
 
-(adjoint_expression
-  "'" @operator)
+; (adjoint_expression
+;   "'" @operator)
 
-(range_expression
-  ":" @operator)
+; (range_expression
+;   ":" @operator)
 
-(arrow_function_expression
-  "->" @operator)
+; (arrow_function_expression
+;   "->" @operator)
 
 [
   "."
