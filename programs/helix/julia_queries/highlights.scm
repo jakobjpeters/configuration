@@ -1,12 +1,17 @@
 
+; `list_builtins(predicate) = clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> predicate(_module, name), names(_module)), [Base, Core]))), ' '))`
+
 ; TODO: context-dependent symbols
-; `::` as an `@operator` vs `@keyword.function`
 ; `const` as a `@keyword.storage.modifier` vs `@keyword.storage.type`
-; `["in" "∈"] as a `@keyword.operator` vs `@operator`
-; `=` as `@keyword.operator` vs `@operator` vs `@keyword.storage`
 ; `:` as an `@operator` vs `@keyword.control.conditional` vs `@string.special.symbol` vs `@keyword`
 ; `$` as an `@operator` vs `@keyword`
-; `["begin" "end"]` as a `@keyword` vs `@variable.builtin`
+; struct & enum identifier vs call as a `@type` vs ?
+; `<:` as an `@operator` vs `@keyword.operator`
+; `=>` as ?
+
+; TODO: pascal case regex --> `@type`?
+; TODO: screaming snake case regex --> `@constant`?
+; TODO: handle `>:`
 
 ; attribute - Class attributes, HTML tag attributes
 
@@ -26,25 +31,30 @@
 (typed_expression (_) "::" (identifier) @type)
 (where_expression
   [
-    (identifier) @type
-    (binary_expression (identifier) @type)
-    (curly_expression (identifier) @type)
-    (curly_expression
-      [
-        (identifier) @type
-        (binary_expression (identifier) @type)
-      ])
+    (identifier) @type.parameter
+    (binary_expression
+      (identifier) @type.parameter
+      (operator)
+      (identifier) @type)
+    (binary_expression
+      (identifier) @type.parameter
+      (operator)
+      (_))
   ])
-(parametrized_type_expression
+(parametrized_type_expression (identifier) @type)
+(curly_expression
   [
-    (identifier) @type
-    (curly_expression
-      [
-        (identifier) @type.parameter
-        (field_expression (_) (identifier) @type)
-        (unary_expression (identifier) @type)
-      ])
-    (field_expression (_) "." (identifier) @type)
+    (identifier) @type.parameter
+    (field_expression (_) "." (identifier) @type.parameter)
+    (unary_expression (identifier) @type)
+    (binary_expression
+      (identifier) @type.parameter
+      (operator)
+      (identifier) @type)
+    (binary_expression
+      (identifier) @type.parameter
+      (operator)
+      (_))
   ])
 (macrocall_expression
   (macro_identifier "@" (identifier) @enum
@@ -60,29 +70,11 @@
       (assignment (juxtaposition_expression (identifier) @type.enum.variant))
     ]
   ))
-; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> getproperty(_module, name) isa Type && name != :(=>), names(_module)), [Base, Core]))), ' '))
+; `list_builtins((_module, name) -> name != :(=>) && getproperty(_module, name) isa Type)`
 ((identifier) @type.builtin (#any-of? @type.builtin
   "AbstractChannel" "AbstractDict" "AbstractDisplay" "AbstractIrrational" "AbstractLock" "AbstractMatch" "AbstractMatrix" "AbstractPattern" "AbstractPipe" "AbstractRange" "AbstractSet" "AbstractSlices" "AbstractUnitRange" "AbstractVecOrMat" "AbstractVector" "Array" "AsyncCondition" "BigFloat" "BigInt" "BitArray" "BitMatrix" "BitSet" "BitVector" "BufferStream" "CanonicalIndexError" "CapturedException" "CartesianIndex" "CartesianIndices" "Cchar" "Cdouble" "Cfloat" "Channel" "Cint" "Cintmax_t" "Clong" "Clonglong" "Cmd" "CodeUnits" "Colon" "ColumnSlices" "Complex" "ComplexF16" "ComplexF32" "ComplexF64" "ComposedFunction" "CompositeException" "Condition" "Cptrdiff_t" "Cshort" "Csize_t" "Cssize_t" "Cstring" "Cuchar" "Cuint" "Cuintmax_t" "Culong" "Culonglong" "Cushort" "Cwchar_t" "Cwstring" "DenseMatrix" "DenseVecOrMat" "DenseVector" "Dict" "DimensionMismatch" "Dims" "EOFError" "Enum" "Event" "ExponentialBackOff" "Fix1" "Fix2" "Generator" "HTML" "IOBuffer" "IOContext" "IOServer" "IOStream" "IdDict" "IdSet" "ImmutableDict" "IndexCartesian" "IndexLinear" "IndexStyle" "InvalidStateException" "Irrational" "IteratorEltype" "IteratorSize" "KeyError" "LazyString" "LinRange" "LinearIndices" "Lockable" "LogRange" "MIME" "Matrix" "Missing" "MissingException" "NTuple" "OS_HANDLE" "OneTo" "OrdinalRange" "Pair" "PartialQuickSort" "PermutedDimsArray" "Pipe" "PipeEndpoint" "ProcessFailedException" "Rational" "RawFD" "ReentrantLock" "Regex" "RegexMatch" "Returns" "RoundingMode" "RowSlices" "Semaphore" "Set" "Slices" "Some" "StepRange" "StepRangeLen" "StridedArray" "StridedMatrix" "StridedVecOrMat" "StridedVector" "StringIndexError" "SubArray" "SubString" "SubstitutionString" "SystemError" "TTY" "TaskFailedException" "Text" "TextDisplay" "Timer" "UUID" "UnitRange" "Val" "VecOrMat" "Vector" "VersionNumber" "WeakKeyDict" "AbstractArray" "AbstractChar" "AbstractFloat" "AbstractString" "Any" "ArgumentError" "AssertionError" "AtomicMemory" "AtomicMemoryRef" "Bool" "BoundsError" "Char" "ConcurrencyViolationError" "Cvoid" "DataType" "DenseArray" "DivideError" "DomainError" "ErrorException" "Exception" "Expr" "Float16" "Float32" "Float64" "Function" "GenericMemory" "GenericMemoryRef" "GlobalRef" "IO" "InexactError" "InitError" "Int" "Int128" "Int16" "Int32" "Int64" "Int8" "Integer" "InterruptException" "LineNumberNode" "LoadError" "Memory" "MemoryRef" "Method" "MethodError" "Module" "NamedTuple" "Nothing" "Number" "OutOfMemoryError" "OverflowError" "Ptr" "QuoteNode" "ReadOnlyMemoryError" "Real" "Ref" "SegmentationFault" "Signed" "StackOverflowError" "String" "Symbol" "Task" "Tuple" "Type" "TypeError" "TypeVar" "UInt" "UInt128" "UInt16" "UInt32" "UInt64" "UInt8" "UndefInitializer" "UndefKeywordError" "UndefRefError" "UndefVarError" "Union" "UnionAll" "Unsigned" "VecElement" "WeakRef"))
 
 ; constructor
-
-; constant (TODO: constant.other.placeholder for %v)
-;     builtin Special constants provided by the language (true, false, nil etc)
-;         boolean
-;     character
-;         escape
-;     numeric (numbers)
-;         integer
-;         float
-(boolean_literal) @constant.builtin.boolean
-(integer_literal) @constant.numeric.integer
-(float_literal) @constant.numeric.float
-; TODO: `@constant.character.escape`
-(character_literal) @constant.character
-; TODO: make numbers a `@constanct.numeric`?
-; clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Type, Module}), names(_module)), [Base, Core]))), ' '))
-((identifier) @constant.builtin (#any-of? @constant.builtin
-  "ARGS" "C_NULL" "DEPOT_PATH" "DL_LOAD_PATH" "ENDIAN_BOM" "ENV" "Inf" "Inf16" "Inf32" "Inf64" "InsertionSort" "LOAD_PATH" "MergeSort" "NaN" "NaN16" "NaN32" "NaN64" "QuickSort" "RoundDown" "RoundFromZero" "RoundNearest" "RoundNearestTiesAway" "RoundNearestTiesUp" "RoundToZero" "RoundUp" "VERSION" "devnull" "im" "missing" "pi" "text_colors" "π" "ℯ" "Vararg" "nothing" "undef"))
 
 ; comment - Code comments
 ;     line - Single line comments (//)
@@ -116,40 +108,31 @@
   (#eq? @r "r"))
 (escape_sequence) @string.escape
 (command_literal) @string.special
-(quote_expression
-  ":" @string.special.symbol
-  [(identifier) (operator)] @string.special.symbol)
+(quote_expression ":" [(identifier) (operator)]) @string.special.symbol
+; must be before `(integer_literal) @constant.numeric.integer`
+(
+  (quote_expression
+    ":"
+    (integer_literal) @integer_literal
+    (#match? @integer_literal "[0-9]{20}")) @string.special.symbol)
 
-; variable - Variables
-;     builtin - Reserved language variables (self, this, super, etc.)
-;     parameter - Function parameters
-;     other
-;         member - Fields of composite data types (e.g. structs, unions)
-;             private - Private fields that use a unique syntax (currently just ECMAScript-based languages)
-; must be before `(identifier) @variable`
-(field_expression (_) (identifier) @variable.other.member)
-; must be before `(identifier) @variable`
-((identifier) @variable.builtin
-  (#any-of? @variable.builtin "begin" "end")
-  (#has-ancestor? @variable.builtin index_expression))
-; TODO: clean up
-; TODO: document & test
-(argument_list
-  [
-    (identifier) @variable.parameter
-    (named_argument
-      [
-        (identifier) @variable.parameter
-        (typed_expression (identifier) @variable.parameter)
-      ])
-    (typed_expression (identifier) @variable.parameter)
-    (tuple_expression
-      [
-        (identifier) @variable.parameter
-        (typed_expression (identifier) @variable.parameter)
-      ])
-  ])
-(identifier) @variable
+; constant (TODO: constant.other.placeholder for %v)
+;     builtin Special constants provided by the language (true, false, nil etc)
+;         boolean
+;     character
+;         escape
+;     numeric (numbers)
+;         integer
+;         float
+(boolean_literal) @constant.builtin.boolean
+(integer_literal) @constant.numeric.integer
+(float_literal) @constant.numeric.float
+; TODO: `@constant.character.escape`
+; (character_literal) @constant.character
+; TODO: make numbers a `@constanct.numeric`?
+; `list_builtins((_module, name) -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Type}))`
+((identifier) @constant.builtin (#any-of? @constant.builtin
+"ARGS" "Base" "Broadcast" "C_NULL" "Checked" "DEPOT_PATH" "DL_LOAD_PATH" "Docs" "ENDIAN_BOM" "ENV" "Filesystem" "GC" "Inf" "Inf16" "Inf32" "Inf64" "InsertionSort" "Iterators" "LOAD_PATH" "Libc" "MathConstants" "MergeSort" "Meta" "NaN" "NaN16" "NaN32" "NaN64" "Order" "QuickSort" "RoundDown" "RoundFromZero" "RoundNearest" "RoundNearestTiesAway" "RoundNearestTiesUp" "RoundToZero" "RoundUp" "ScopedValues" "Sort" "StackTraces" "Sys" "Threads" "VERSION" "devnull" "im" "missing" "pi" "text_colors" "π" "ℯ" "Core" "Main" "Vararg" "nothing" "undef"))
 
 ; label
 
@@ -198,6 +181,28 @@
 (finally_clause "finally" @keyword.control.exception)
 (for_binding (operator) @keyword.operator)
 (where_expression "where" @keyword.operator)
+(signature (typed_expression "::" @keyword.operator))
+(arrow_function_expression (typed_expression "::" @keyword.operator))
+(do_clause
+  (argument_list
+    (typed_expression "::" @keyword.operator)))
+(macrocall_expression
+  (macro_identifier "@" (identifier) @enum
+    (#eq? @enum "enum"))
+  (macro_argument_list
+    (typed_expression (identifier) "::" @keyword.operator (_))
+    [
+      (identifier)
+      (assignment (identifier) (operator) (_))
+      (assignment (juxtaposition_expression (identifier)))
+    ]
+  ))
+(unary_typed_expression "::" @keyword.operator)
+; must be before `(identifier) @variable`
+(
+  (identifier) @keyword.operator
+  (#any-of? @keyword.operator "begin" "end")
+  (#has-ancestor? @keyword.operator index_expression))
 (function_definition ["function" "end"] @keyword.function)
 (do_clause ["do" "end"] @keyword.function)
 (arrow_function_expression "->" @keyword.function)
@@ -212,6 +217,39 @@
 (quote_expression ":" @keyword)
 (macro_definition ["macro" "end"] @keyword)
 
+; variable - Variables
+;     builtin - Reserved language variables (self, this, super, etc.)
+;     parameter - Function parameters
+;     other
+;         member - Fields of composite data types (e.g. structs, unions)
+;             private - Private fields that use a unique syntax (currently just ECMAScript-based languages)
+; must be before `(identifier) @variable`
+(field_expression (_) "." (identifier) @variable.other.member)
+; `list_builtins(!isconst)
+; must be before `(identifier) @variable`
+(
+  (identifier) @variable.builtin
+  (#any-of? @variable.builtin
+    "PROGRAM_FILE" "stderr" "stdin" "stdout"))
+; TODO: clean up
+; TODO: document & test
+(argument_list
+  [
+    (identifier) @variable.parameter
+    (named_argument
+      [
+        (identifier) @variable.parameter
+        (typed_expression (identifier) @variable.parameter)
+      ])
+    (typed_expression (identifier) @variable.parameter)
+    (tuple_expression
+      [
+        (identifier) @variable.parameter
+        (typed_expression (identifier) @variable.parameter)
+      ])
+  ])
+(identifier) @variable
+
 ; operator - ||, +=, >
 (operator) @operator
 (adjoint_expression "'" @operator)
@@ -219,7 +257,6 @@
 (field_expression "." @operator)
 (splat_expression "..." @operator)
 (typed_expression "::" @operator)
-(unary_typed_expression "::" @operator)
 (interpolation_expression "$" @operator)
 (string_interpolation "$" @operator)
 

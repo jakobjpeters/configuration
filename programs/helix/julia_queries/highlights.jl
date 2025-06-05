@@ -1,4 +1,6 @@
 
+# Vector{Base.Vector.typeof(1)}
+
 # attribute
 
 # type
@@ -15,17 +17,17 @@ f(::Vector) = nothing
 ## (typed_expression (_) "::" (identifier) @type)
 1::Int
 
-## (where_expression (identifier) @type)
+## (where_expression (identifier) @type.parameter)
 T where T
 
-## (where_expression (binary_expression (identifier) @type))
+## (where_expression (binary_expression (identifier) @type.parameter "<:" (identifier) @type))
 T where T <: Any
 
-## (where_expression (curly_expression (identifier) @type))
+## (where_expression (curly_expression (identifier) @type.parameter))
 T where {T}
 
-## (where_expression (curly_expression (binary_expression (identifier) @type)))
-T where {T <: T}
+## (where_expression (curly_expression (binary_expression (identifier) @type.parameter "<:" (identifier) @type)))
+T where {T <: Any}
 
 ## (parametrized_type_expression (identifier) @type)
 Union{}
@@ -33,16 +35,19 @@ Union{}
 ## (parametrized_type_expression (curly_expression (identifier) @type.parameter))
 Vector{T}
 
-## (parametrized_type_expression (curly_expression (field_expression (_) "." (identifier) @type)))
+## (parametrized_type_expression (curly_expression (field_expression (_) "." (identifier) @type.parameter)))
 Vector{Base.T}
 
 ## (parametrized_type_expression (curly_expression (unary_expression (identifier) @type)))
 Vector{<:Any}
 
-## (parametrized_type_expression (field_expression (_) (identifier) @type))
+## (parametrized_type_expression (curly_expression (binary_expression (identifier) @type.parameter "<:" (_))))
+struct X{T<:Any} end
+
+## (parametrized_type_expression (field_expression (_) "." (identifier) @type))
 Vector{Base.Vector{T}}
 
-## (macrocall_expression (macro_identifier "@" (identifier) @enum (#eq? @enum "enum")) (macro_argument_list [ (identifier) @type.enum (typed_expression (identifier) @type.enum "::" (_)) ] [ (identifier) @type.enum.variant (assignment (identifier) @type.enum.variant (operator) (_)) (assignment (juxtaposition_expression (identifier) @type.enum.variant)) ] ))
+## (macrocall_expression (macro_identifier "@" (identifier) @enum (#eq? @enum "enum")) (macro_argument_list [ (identifier) @type.enum (typed_expression (identifier) @type.enum "::" (_)) ] [ (identifier) @type.enum.variant (assignment (identifier) @type.enum.variant "=" (_)) (assignment (juxtaposition_expression (identifier) @type.enum.variant)) ] ))
 @enum X::Int a b = 2
 
 ## ((identifier) @type.builtin (#any-of @type.builtin ...))
@@ -106,8 +111,11 @@ r""
 
 # variable
 
-## (field_expression (identifier) @variable.member .)
+## (field_expression (_) (identifier) @variable.member .)
 x.y
+
+# ((identifier) @variable.builtin (#any-of? @variable.builtin "PROGRAM_FILE" "stderr" "stdin" "stdout"))
+stdout
 
 ## ((identifier) @variable.builtin (#any-of? @variable.builtin "begin" "end") (#has-ancestor? @variable.builtin index_expression))
 x[begin:end]
