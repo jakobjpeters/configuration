@@ -1,5 +1,5 @@
 
-; `list_builtins(predicate) = clipboard(join(map(name -> "\"$name\"", unique(Iterators.flatmap(_module -> filter(name -> predicate(_module, name), names(_module)), [Base, Core]))), ' '))`
+; `list_builtins(predicate) = clipboard(join(map(name -> escape_string("\"$name\"", '\\'), unique(Iterators.flatmap(_module -> filter(name -> predicate(_module, name), names(_module)), [Base, Core]))), ' '))`
 
 ; TODO: context-dependent symbols
 ; `const` as a `@keyword.storage.modifier` vs `@keyword.storage.type`
@@ -106,7 +106,6 @@
 ((prefixed_string_literal
   (identifier) @r) @string.regexp
   (#eq? @r "r"))
-(escape_sequence) @string.escape
 (command_literal) @string.special
 (quote_expression ":" [(identifier) (operator)]) @string.special.symbol
 ; must be before `(integer_literal) @constant.numeric.integer`
@@ -124,15 +123,30 @@
 ;     numeric (numbers)
 ;         integer
 ;         float
-(boolean_literal) @constant.builtin.boolean
+; `list_builtins((_module, name) -> isconst(_module, name) && getproperty(_module, name) isa Union{AbstractIrrational, Complex, Rational})`
+(
+  (identifier) @constant.numeric
+  (#any-of? @constant.numeric "im" "pi" "π" "ℯ"))
 (integer_literal) @constant.numeric.integer
+; `list_builtins((_module, name) -> isconst(_module, name) && getproperty(_module, name) isa Integer)`
+(
+  (identifier) @constant.numeric.integer
+  (#any-of? @constant.numeric.integer "ENDIAN_BOM"))
 (float_literal) @constant.numeric.float
-; TODO: `@constant.character.escape`
-; (character_literal) @constant.character
-; TODO: make numbers a `@constanct.numeric`?
-; `list_builtins((_module, name) -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Type}))`
+; `list_builtins((_module, name) -> isconst(_module, name) && getproperty(_module, name) isa AbstractFloat)`
+((identifier) @constant.numeric.float (#any-of? @constant.numeric.float
+  "Inf" "Inf16" "Inf32" "Inf64" "NaN" "NaN16" "NaN32" "NaN64"))
+(escape_sequence) @constant.character.escape
+(
+  (character_literal) @constant.character.escape
+  (#match?
+    @constant.character.escape
+    "\\\\([^uUx0-7]|[uU][0-9a-fA-F]{1,6}|[0-7]{1,3}|x[0-9a-fA-F]{2})"))
+(character_literal) @constant.character
+(boolean_literal) @constant.builtin.boolean
+; `list_builtins((_module, name) -> isconst(_module, name) && !(getproperty(_module, name) isa Union{Function, Number, Type}))`
 ((identifier) @constant.builtin (#any-of? @constant.builtin
-"ARGS" "Base" "Broadcast" "C_NULL" "Checked" "DEPOT_PATH" "DL_LOAD_PATH" "Docs" "ENDIAN_BOM" "ENV" "Filesystem" "GC" "Inf" "Inf16" "Inf32" "Inf64" "InsertionSort" "Iterators" "LOAD_PATH" "Libc" "MathConstants" "MergeSort" "Meta" "NaN" "NaN16" "NaN32" "NaN64" "Order" "QuickSort" "RoundDown" "RoundFromZero" "RoundNearest" "RoundNearestTiesAway" "RoundNearestTiesUp" "RoundToZero" "RoundUp" "ScopedValues" "Sort" "StackTraces" "Sys" "Threads" "VERSION" "devnull" "im" "missing" "pi" "text_colors" "π" "ℯ" "Core" "Main" "Vararg" "nothing" "undef"))
+  "ARGS" "Base" "Broadcast" "C_NULL" "Checked" "DEPOT_PATH" "DL_LOAD_PATH" "Docs" "ENV" "Filesystem" "GC" "InsertionSort" "Iterators" "LOAD_PATH" "Libc" "MathConstants" "MergeSort" "Meta" "Order" "QuickSort" "RoundDown" "RoundFromZero" "RoundNearest" "RoundNearestTiesAway" "RoundNearestTiesUp" "RoundToZero" "RoundUp" "ScopedValues" "Sort" "StackTraces" "Sys" "Threads" "VERSION" "devnull" "missing" "text_colors" "Core" "Main" "Vararg" "nothing" "undef"))
 
 ; label
 
@@ -183,9 +197,7 @@
 (where_expression "where" @keyword.operator)
 (signature (typed_expression "::" @keyword.operator))
 (arrow_function_expression (typed_expression "::" @keyword.operator))
-(do_clause
-  (argument_list
-    (typed_expression "::" @keyword.operator)))
+(do_clause (argument_list (typed_expression "::" @keyword.operator)))
 (macrocall_expression
   (macro_identifier "@" (identifier) @enum
     (#eq? @enum "enum"))
@@ -216,6 +228,65 @@
 (quote_statement ["quote" "end"] @keyword)
 (quote_expression ":" @keyword)
 (macro_definition ["macro" "end"] @keyword)
+
+; operator - ||, +=, >
+(operator) @operator
+(adjoint_expression "'" @operator)
+(range_expression ":" @operator)
+(field_expression "." @operator)
+(splat_expression "..." @operator)
+(typed_expression "::" @operator)
+(interpolation_expression "$" @operator)
+(string_interpolation "$" @operator)
+
+; function
+;     builtin
+;     method
+;         private - Private methods that use a unique syntax (currently just ECMAScript-based languages)
+;     macro
+;     special (preprocessor in C)
+(call_expression (identifier) @function)
+(call_expression (field_expression (_) "." (identifier) @function))
+(broadcast_call_expression (field_expression (_) "." (identifier) @function))
+(macro_definition
+  (signature
+    [
+      (identifier) @function.macro
+      (call_expression (identifier) @function.macro)
+    ]))
+(macro_identifier (identifier) @function.macro) @function.macro
+; `list_builtins((_module, name) -> isletter(string(name)[1]) && getproperty(_module, name) isa Function)`
+((identifier) @function.builtin (#any-of? @function.builtin
+  "PipeBuffer" "abs" "abs2" "abspath" "accumulate" "accumulate!" "acos" "acosd" "acosh" "acot" "acotd" "acoth" "acquire" "acsc" "acscd" "acsch" "active_project" "addenv" "adjoint" "all" "all!" "allequal" "allunique" "angle" "any" "any!" "append!" "argmax" "argmin" "ascii" "asec" "asecd" "asech" "asin" "asind" "asinh" "asyncmap" "asyncmap!" "atan" "atand" "atanh" "atexit" "atreplinit" "axes" "backtrace" "basename" "big" "bind" "binomial" "bitreverse" "bitrotate" "bitstring" "broadcast" "broadcast!" "bswap" "bytes2hex" "bytesavailable" "cat" "catch_backtrace" "cbrt" "cconvert" "cd" "ceil" "cglobal" "checkbounds" "checked_length" "checkindex" "chmod" "chomp" "chop" "chopprefix" "chopsuffix" "chown" "circcopy!" "circshift" "circshift!" "cis" "cispi" "clamp" "clamp!" "cld" "close" "closewrite" "cmp" "coalesce" "code_lowered" "code_typed" "codepoint" "codeunit" "codeunits" "collect" "complex" "conj" "conj!" "contains" "contractuser" "convert" "copy" "copy!" "copyline" "copysign" "copyto!" "copyuntil" "cos" "cosc" "cosd" "cosh" "cospi" "cot" "cotd" "coth" "count" "count!" "count_ones" "count_zeros" "countlines" "cp" "csc" "cscd" "csch" "ctime" "cumprod" "cumprod!" "cumsum" "cumsum!" "current_exceptions" "current_task" "deepcopy" "deg2rad" "delete!" "deleteat!" "denominator" "depwarn" "detach" "diff" "digits" "digits!" "dirname" "disable_sigint" "diskstat" "display" "displayable" "displaysize" "div" "divrem" "download" "dropdims" "dump" "eachcol" "eachindex" "eachline" "eachmatch" "eachrow" "eachrsplit" "eachslice" "eachsplit" "elsize" "eltype" "empty" "empty!" "endswith" "enumerate" "eof" "eps" "error" "errormonitor" "esc" "escape_string" "evalfile" "evalpoly" "exit" "exit_on_sigint" "exp" "exp10" "exp2" "expanduser" "expm1" "exponent" "extrema" "extrema!" "factorial" "falses" "fd" "fdio" "fetch" "fieldcount" "fieldname" "fieldnames" "fieldoffset" "fieldtypes" "filemode" "filesize" "fill" "fill!" "filter" "filter!" "finalize" "finalizer" "findall" "findfirst" "findlast" "findmax" "findmax!" "findmin" "findmin!" "findnext" "findprev" "first" "firstindex" "fld" "fld1" "fldmod" "fldmod1" "flipsign" "float" "floatmax" "floatmin" "floor" "flush" "fma" "foldl" "foldr" "foreach" "fourthroot" "frexp" "front" "fullname" "functionloc" "gcd" "gcdx" "gensym" "get" "get!" "get_zero_subnormals" "gethostname" "getindex" "getkey" "getpid" "getproperty" "gperm" "hardlink" "hasfield" "hash" "haskey" "hasmethod" "hasproperty" "hcat" "hex2bytes" "hex2bytes!" "homedir" "htol" "hton" "hvcat" "hvncat" "hypot" "identify_package" "identity" "ifelse" "ignorestatus" "imag" "in" "in!" "include_dependency" "include_string" "indexin" "insert!" "insorted" "instances" "intersect" "intersect!" "inv" "invmod" "invokelatest" "invperm" "invpermute!" "isabspath" "isabstracttype" "isambiguous" "isapprox" "isascii" "isassigned" "isbinaryoperator" "isbits" "isbitstype" "isblockdev" "ischardev" "iscntrl" "isconcretetype" "isconst" "isdigit" "isdir" "isdirpath" "isdisjoint" "isdispatchtuple" "isdone" "isempty" "isequal" "iseven" "isexecutable" "isexported" "isexpr" "isfifo" "isfile" "isfinite" "isidentifier" "isimmutable" "isinf" "isinteger" "isinteractive" "isless" "isletter" "islink" "islocked" "islowercase" "ismarked" "ismissing" "ismount" "ismutable" "ismutabletype" "isnan" "isnothing" "isnumeric" "isodd" "isone" "isopen" "isoperator" "ispath" "isperm" "ispow2" "isprimitivetype" "isprint" "ispublic" "ispunct" "isqrt" "isreadable" "isreadonly" "isready" "isreal" "issetequal" "issetgid" "issetuid" "issingletontype" "issocket" "issorted" "isspace" "issticky" "isstructtype" "issubnormal" "issubset" "istaskdone" "istaskfailed" "istaskstarted" "istextmime" "isunaryoperator" "isunordered" "isuppercase" "isvalid" "iswritable" "isxdigit" "iszero" "iterate" "jit_total_bytes" "join" "joinpath" "keepat!" "keys" "keytype" "kill" "kron" "kron!" "last" "lastindex" "lcm" "ldexp" "leading_ones" "leading_zeros" "length" "link_pipe!" "load_path" "locate_package" "lock" "log" "log10" "log1p" "log2" "logrange" "lowercase" "lowercasefirst" "lpad" "lstat" "lstrip" "ltoh" "macroexpand" "map" "map!" "mapfoldl" "mapfoldr" "mapreduce" "mapslices" "mark" "match" "max" "maximum" "maximum!" "maxintfloat" "memoryref" "merge" "merge!" "mergewith" "mergewith!" "methods" "min" "minimum" "minimum!" "minmax" "mkdir" "mkpath" "mktemp" "mktempdir" "mod" "mod1" "mod2pi" "modf" "modifyproperty!" "moduleroot" "mtime" "muladd" "mv" "nameof" "names" "nand" "ncodeunits" "ndigits" "ndims" "nextfloat" "nextind" "nextpow" "nextprod" "nonmissingtype" "nor" "normpath" "notify" "notnothing" "ntoh" "ntuple" "numerator" "objectid" "occursin" "oftype" "one" "ones" "oneunit" "only" "open" "operator_associativity" "operator_precedence" "operm" "pairs" "parent" "parentindices" "parentmodule" "parse" "partialsort" "partialsort!" "partialsortperm" "partialsortperm!" "pathof" "peek" "permute!" "permutedims" "permutedims!" "pipeline" "pkgdir" "pkgversion" "pointer" "pointer_from_objref" "pop!" "popat!" "popdisplay" "popfirst!" "position" "powermod" "precision" "precompile" "prepend!" "prevfloat" "prevind" "prevpow" "print" "println" "printstyled" "process_exited" "process_running" "prod" "prod!" "promote" "promote_rule" "promote_shape" "promote_type" "propertynames" "push!" "pushdisplay" "pushfirst!" "put!" "pwd" "rad2deg" "rand" "randn" "range" "rationalize" "read" "read!" "readavailable" "readbytes!" "readchomp" "readdir" "readeach" "readline" "readlines" "readlink" "readuntil" "real" "realpath" "redirect_stderr" "redirect_stdin" "redirect_stdio" "redirect_stdout" "redisplay" "reduce" "reenable_sigint" "reim" "reinterpret" "release" "relpath" "rem" "rem2pi" "remove_linenums!" "repeat" "replace" "replace!" "replaceproperty!" "repr" "reset" "reseteof" "reshape" "resize!" "rest" "rethrow" "retry" "reverse" "reverse!" "reverseind" "rm" "rot180" "rotl90" "rotr90" "round" "rounding" "rpad" "rsplit" "rstrip" "run" "runtests" "samefile" "schedule" "searchsorted" "searchsortedfirst" "searchsortedlast" "sec" "secd" "sech" "seek" "seekend" "seekstart" "selectdim" "set_zero_subnormals" "setcpuaffinity" "setdiff" "setdiff!" "setenv" "setindex!" "setprecision" "setproperty!" "setpropertyonce!" "setrounding" "show" "showable" "showerror" "sign" "signbit" "signed" "significand" "similar" "sin" "sinc" "sincos" "sincosd" "sincospi" "sind" "sinh" "sinpi" "size" "sizehint!" "sizeof" "skip" "skipchars" "skipmissing" "sleep" "something" "sort" "sort!" "sortperm" "sortperm!" "sortslices" "splat" "splice!" "split" "split_rest" "splitdir" "splitdrive" "splitext" "splitpath" "sprint" "sqrt" "stack" "stacktrace" "startswith" "stat" "step" "stride" "strides" "string" "strip" "success" "sum" "sum!" "summary" "summarysize" "supertype" "swapproperty!" "symdiff" "symdiff!" "symlink" "systemerror" "tail" "take!" "tan" "tand" "tanh" "tanpi" "task_local_storage" "tempdir" "tempname" "textwidth" "thisind" "time" "time_ns" "timedwait" "titlecase" "to_index" "to_indices" "touch" "trailing_ones" "trailing_zeros" "transcode" "transpose" "trues" "trunc" "truncate" "trylock" "tryparse" "typeintersect" "typejoin" "typemax" "typemin" "unescape_string" "union" "union!" "unique" "unique!" "unlock" "unmark" "unsafe_convert" "unsafe_copyto!" "unsafe_load" "unsafe_modify!" "unsafe_pointer_to_objref" "unsafe_read" "unsafe_replace!" "unsafe_store!" "unsafe_string" "unsafe_swap!" "unsafe_trunc" "unsafe_wrap" "unsafe_write" "unsigned" "uperm" "uppercase" "uppercasefirst" "valtype" "values" "vcat" "vec" "vect" "view" "wait" "walkdir" "which" "widemul" "widen" "windowserror" "withenv" "write" "xor" "yield" "yieldto" "zero" "zeros" "zip" "applicable" "arrayref" "arrayset" "arraysize" "const_arrayref" "eval" "fieldtype" "getfield" "getglobal" "invoke" "isa" "isdefined" "modifyfield!" "modifyglobal!" "nfields" "replacefield!" "replaceglobal!" "setfield!" "setfieldonce!" "setglobal!" "setglobalonce!" "swapfield!" "swapglobal!" "throw" "tuple" "typeassert" "typeof"))
+
+; tag - Tags (e.g. <body> in HTML)
+;     builtin
+
+; namespace
+(module_definition (identifier) @namespace)
+
+; special
+
+; markup
+;     heading
+;         marker
+;         1, 2, 3, 4, 5, 6 - heading text for h1 through h6
+;     list
+;         unnumbered
+;         numbered
+;         checked
+;         unchecked
+;     bold
+;     italic
+;     strikethrough
+;     link
+;         url - URLs pointed to by links
+;         label - non-URL link references
+;         text - URL and image descriptions in links
+;     quote
+;     raw
+;         inline
+;         block
 
 ; variable - Variables
 ;     builtin - Reserved language variables (self, this, super, etc.)
@@ -249,48 +320,3 @@
       ])
   ])
 (identifier) @variable
-
-; operator - ||, +=, >
-(operator) @operator
-(adjoint_expression "'" @operator)
-(range_expression ":" @operator)
-(field_expression "." @operator)
-(splat_expression "..." @operator)
-(typed_expression "::" @operator)
-(interpolation_expression "$" @operator)
-(string_interpolation "$" @operator)
-
-; function
-;     builtin
-;     method
-;         private - Private methods that use a unique syntax (currently just ECMAScript-based languages)
-;     macro
-;     special (preprocessor in C)
-
-; tag - Tags (e.g. <body> in HTML)
-;     builtin
-
-; namespace
-
-; special
-
-; markup
-;     heading
-;         marker
-;         1, 2, 3, 4, 5, 6 - heading text for h1 through h6
-;     list
-;         unnumbered
-;         numbered
-;         checked
-;         unchecked
-;     bold
-;     italic
-;     strikethrough
-;     link
-;         url - URLs pointed to by links
-;         label - non-URL link references
-;         text - URL and image descriptions in links
-;     quote
-;     raw
-;         inline
-;         block

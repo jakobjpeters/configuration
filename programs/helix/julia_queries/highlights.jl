@@ -1,5 +1,7 @@
 
-# Vector{Base.Vector.typeof(1)}
+Main.x
+
+# TODO: command literals
 
 # attribute
 
@@ -68,6 +70,8 @@ true
 
 ## (character_literal) @constant.character
 ' '
+'\n'
+begin "a\nb" end
 
 ## ((identifier) @constant.builtin (#any-of @constant.builtin ...))
 nothing

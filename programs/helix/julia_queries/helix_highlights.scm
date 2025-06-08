@@ -13,36 +13,36 @@
 ;   ] @string.special.symbol)
 
 ; Function calls
-(call_expression
-  (identifier) @function.call)
+; (call_expression
+;   (identifier) @function.call)
 
-(call_expression
-  (field_expression
-    (identifier) @function.call .))
+; (call_expression
+;   (field_expression
+;     (identifier) @function.call .))
 
-(broadcast_call_expression
-  (identifier) @function.call)
+; (broadcast_call_expression
+;   (identifier) @function.call)
 
-(broadcast_call_expression
-  (field_expression
-    (identifier) @function.call .))
+; (broadcast_call_expression
+;   (field_expression
+;     (identifier) @function.call .))
 
 ; Macros
-(macro_identifier) @function.macro
+; (macro_identifier) @function.macro
 
-(macro_definition
-  (signature
-    (call_expression
-      .
-      (identifier) @function.macro)))
+; (macro_definition
+;   (signature
+;     (call_expression
+;       .
+;       (identifier) @function.macro)))
 
 ; Built-in functions
 ; filter(name -> Base.eval(Core, name) isa Core.Builtin, names(Core))
-((identifier) @function.builtin
-  (#any-of? @function.builtin
-    "applicable" "fieldtype" "getfield" "getglobal" "invoke" "isa" "isdefined" "modifyfield!"
-    "modifyglobal!" "nfields" "replacefield!" "replaceglobal!" "setfield!" "setfieldonce!"
-    "setglobal!" "setglobalonce!" "swapfield!" "swapglobal!" "throw" "tuple" "typeassert" "typeof"))
+; ((identifier) @function.builtin
+;   (#any-of? @function.builtin
+;     "applicable" "fieldtype" "getfield" "getglobal" "invoke" "isa" "isdefined" "modifyfield!"
+;     "modifyglobal!" "nfields" "replacefield!" "replaceglobal!" "setfield!" "setfieldonce!"
+;     "setglobal!" "setglobalonce!" "swapfield!" "swapglobal!" "throw" "tuple" "typeassert" "typeof"))
 
 ; Type definitions
 ; (type_head (_) @type.definition)
@@ -239,22 +239,22 @@
 ;   ] @keyword.type)
 
 ; Operators & Punctuation
-(operator) @operator
+; (operator) @operator
 
-(adjoint_expression
-  "'" @operator)
+; (adjoint_expression
+;   "'" @operator)
 
-(range_expression
-  ":" @operator)
+; (range_expression
+;   ":" @operator)
 
-(arrow_function_expression
-  "->" @operator)
+; (arrow_function_expression
+;   "->" @operator)
 
-[
-  "."
-  "..."
-  "::"
-] @punctuation.special
+; [
+;   "."
+;   "..."
+;   "::"
+; ] @punctuation.special
 
 ; [
 ;   ","
@@ -292,8 +292,8 @@
 
 ; (float_literal) @number.float
 
-((identifier) @number.float
-  (#any-of? @number.float "NaN" "NaN16" "NaN32" "Inf" "Inf16" "Inf32"))
+; ((identifier) @number.float
+;   (#any-of? @number.float "NaN" "NaN16" "NaN32" "Inf" "Inf16" "Inf32"))
 
 ; (character_literal) @character
 
