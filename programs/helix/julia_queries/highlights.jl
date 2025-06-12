@@ -1,5 +1,16 @@
 
-Main.x
+"""
+    f(::Int)
+*x*
+# Examples
+"""
+x
+
+@doc "*x*" x
+@doc md"*x*" x
+@doc typst"*x* \ # a" x
+
+typst"*x*"
 
 # TODO: command literals
 

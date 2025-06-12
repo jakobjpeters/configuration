@@ -1,4 +1,5 @@
 
+; TODO: recursively search public modules
 ; `list_builtins(predicate) = clipboard(join(map(name -> escape_string("\"$name\"", '\\'), unique(Iterators.flatmap(_module -> filter(name -> predicate(_module, name), names(_module)), [Base, Core]))), ' '))`
 
 ; TODO: context-dependent symbols
