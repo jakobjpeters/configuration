@@ -13,6 +13,8 @@ using Preferences: has_preference, load_preference, set_preferences!
 using REPL: REPLCompletions
 using Speculator: install_speculator
 
+const limit = 2 ^ 8
+
 """
     bar_cursor()
 
@@ -51,7 +53,7 @@ function __init__()
     @info "`startup.jl` is running - see also `@doc Startup`"
 
     bar_cursor()
-    install_speculator(; limit = 2 ^ 8)
+    install_speculator(; limit)
 
     for (key, value) in [
         "JULIA_EDITOR" => "hx",
@@ -88,7 +90,10 @@ function __init__()
                 if $name == "PAndQ"
                     install_atomize_mode()
                     @eval @variables p q
-                elseif $name == "Speculator" install_speculator(; limit = 2 ^ 8, verbosity = debug)
+                elseif $name == "Speculator"
+                    install_speculator(;
+                        limit = $limit, verbosity = compile ∪ pass ∪ review ∪ warn
+                    )
                 end
             end
         end

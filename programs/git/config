@@ -1,13 +1,22 @@
 [user]
-	name = Jakob Peters
-	email = jakobj.peters@gmail.com
+    name = Jakob Peters
+    email = jakobj.peters@gmail.com
 [core]
-	editor = hx
-	excludesfile = /home/jakob/.config/git/.gitignore
-	autocrlf = input
+    editor = hx
+    excludesfile = /home/jakob/.config/git/.gitignore
+    autocrlf = input
+    pager = delta
 [init]
-	defaultBranch = main
+    defaultBranch = main
 [credential]
-	helper = store
+    helper = store
 [commit]
-	verbose = true
+    verbose = true
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    line-numbers = true
+    side-by-side = true
+    navigate = true
+[merge]
+    conflictStyle = zdiff3

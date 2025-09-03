@@ -15,3 +15,5 @@ $env.PROMPT_COMMAND = {
 
     $path_segment | str replace --all (char path_sep) $path_seperator
 }
+
+zoxide init nushell | save --force ~/.config/zoxide.nu

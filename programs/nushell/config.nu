@@ -1,5 +1,5 @@
 
-alias julia = julia --banner=no --depwarn=yes --threads=auto
+alias j = julia --banner=no --depwarn=yes --threads=auto
 
 $env.config = {
     show_banner: false
@@ -8,3 +8,5 @@ $env.config = {
         emacs: line
     }
 }
+
+source ~/.config/zoxide.nu
