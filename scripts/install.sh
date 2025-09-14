@@ -1,4 +1,6 @@
 
+echo Installing configuration
+
 echo Updating \`apt\`
 apt update
 

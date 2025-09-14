@@ -1,8 +1,11 @@
 
 FROM debian:trixie
 
-WORKDIR /configuration
+ENV PATH="/root/.cargo/bin:${PATH}"
 
-COPY . .
+COPY scripts scripts
 
-RUN scripts/install.sh
+RUN --mount=type=cache,target=/root/home/.cargo/registry scripts/install.sh && scripts/update.sh
+RUN rm --recursive scripts
+
+CMD nu

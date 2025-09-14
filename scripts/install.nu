@@ -1,34 +1,67 @@
 
-let apt_packages: list = [libclang-dev libfontconfig1-dev libssl-dev pkg-config]
+source utilities.nu
 
-let cargo_packages: list = [
-    alacritty
-    bat
-    dua-cli
-    fd-find
-    juliaup
-    ouch
-    ripgrep
-    tokei
-    typst-cli
-    zoxide
+const apt_packages: list<string> = [
+    firefox-esr # web browser
+    git # version control
+    libclang-dev # dependency
+    libfontconfig1-dev # dependency
+    libssl-dev # dependency
+    man # documentation
+    pkg-config # dependency
+    tree # directory viewer
+]
+const version_keys: list<string> = [major minor patch]
+const linked_folders: list<string> = [alacritty git helix julia nushell]
+const github_projects: list<string> = [
+    MachineLearning.jl PAndQ.jl Typstry.jl Speculator.jl configuration boids monty_hall
 ]
 
-let linked_folders: list = [alacritty beautyline git helix julia nushell]
+let clones: string = $"($env.HOME)/code/clones"
+let projects: string = $"($env.HOME)/code/projects"
+let folders: list<string> = [
+    .config .julia code/packages code/projects data
+] | each {|folder| $"($env.HOME)/($folder)"} | append [$clones $projects]
+let helix: string = $"($clones)/helix"
 
-def log [packages: list] {
-    print $"Installing ($packages | each {|package| $"`($package)`"} | str join ', ')"
-}
+log "Creating" $folders
+mkdir ...$folders
 
-log $apt_packages
+log "Installing" $apt_packages
 apt install --yes ...$apt_packages
 
-log $cargo_packages
+log "Installing" $cargo_packages
 cargo install --locked ...$cargo_packages
 
-mkdir ~/.config
+print "Installing helix"
 
-for folder: string in $linked_folders {
+git -C $clones clone https://github.com/helix-editor/helix
+
+let version: string = (git -C $helix tag --list) | split row "\n" | each {
+    let version: string = str replace v ""
+    let version_values: list<int> = $version | split row "." | each { into int }
+
+    $version_keys | enumerate | reduce --fold { version: $version } {|pair, info|
+        $info | insert $pair.item ($version_values | get --optional $pair.index | default 0)
+    }
+} | sort-by ...($version_keys | each {|key| [$key] | into cell-path }) | last | get version
+
+git -C $helix checkout $version
+(cargo install
+   --profile opt
+   --config 'build.rustflags="-C target-cpu=native"'
+   --path $"($helix)/helix-term"
+   --locked)
+
+hx --grammar fetch
+hx --grammar build
+
+log "Cloning" $github_projects
+for github_project in $github_projects {
+    git -C $projects clone --recurse-submodules https://github.com/jakobjpeters/$github_project
+}
+
+for folder in $linked_folders {
     let path: string = if $folder == julia {
         ".julia/config"
     } else {
@@ -38,10 +71,7 @@ for folder: string in $linked_folders {
     let target: string = $"($env.HOME)/($path)"
 
     print $"Linking `($source)` to `($target)`"
-    rm --force --recursive $target
     ln --force --symbolic $source $target
 }
 
-# TODO: install beautyline (`.local/share/icons`)
-# TODO: install desktop files
-# TODO: install Docker
+print "Finished installing configuration"
