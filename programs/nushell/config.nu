@@ -8,5 +8,3 @@ $env.config = {
         emacs: line
     }
 }
-
-source ~/.config/zoxide.nu

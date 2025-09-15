@@ -11,29 +11,29 @@ const apt_packages: list<string> = [
     pkg-config # dependency
     tree # directory viewer
 ]
-const version_keys: list<string> = [major minor patch]
-const linked_folders: list<string> = [alacritty git helix julia nushell]
 const github_projects: list<string> = [
     MachineLearning.jl PAndQ.jl Typstry.jl Speculator.jl configuration boids monty_hall
 ]
+const linked_folders: list<string> = [alacritty git helix julia nushell]
+const version_keys: list<string> = [major minor patch]
 
 let clones: string = $"($env.HOME)/code/clones"
 let projects: string = $"($env.HOME)/code/projects"
-let folders: list<string> = [
-    .config .julia code/packages code/projects data
-] | each {|folder| $"($env.HOME)/($folder)"} | append [$clones $projects]
+let folders: list<string> = ([.config .julia data]
+    | each {|folder| $"($env.HOME)/($folder)"}
+    | append [$clones $projects])
 let helix: string = $"($clones)/helix"
 
-log "Creating" $folders
+log Creating $folders
 mkdir ...$folders
 
-log "Installing" $apt_packages
+log Installing $apt_packages
 apt install --yes ...$apt_packages
 
-log "Installing" $cargo_packages
+log Installing $cargo_packages
 cargo install --locked ...$cargo_packages
 
-print "Installing helix"
+log Installing [Helix]
 
 git -C $clones clone https://github.com/helix-editor/helix
 
@@ -56,18 +56,15 @@ git -C $helix checkout $version
 hx --grammar fetch
 hx --grammar build
 
-log "Cloning" $github_projects
+log Cloning $github_projects
 for github_project in $github_projects {
-    git -C $projects clone --recurse-submodules https://github.com/jakobjpeters/$github_project
+    let address: string = $"https://github.com/jakobjpeters/($github_project)"
+    git -C $projects clone --recurse-submodules $address
 }
 
 for folder in $linked_folders {
-    let path: string = if $folder == julia {
-        ".julia/config"
-    } else {
-        $".config/($folder)"
-    }
-    let source: string = $"(pwd)/programs/($folder)"
+    let path: string = if $folder == julia { ".julia/config" } else { $".config/($folder)" }
+    let source: string = $"($projects)/configuration/programs/($folder)"
     let target: string = $"($env.HOME)/($path)"
 
     print $"Linking `($source)` to `($target)`"

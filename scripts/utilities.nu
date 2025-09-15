@@ -11,9 +11,13 @@ const cargo_packages: list<string> = [
     ripgrep # line search
     tokei # code statistics
     typst-cli # typesetting language
-    zoxide # directory navigator
 ]
 
+def cyan [x: string] { (ansi cyan) + $x + (ansi reset) }
+
 def log [verb: string, names: list<string>] {
-    print $"($verb) ($names | each {|package| $"`($package)`"} | str join ', ')"
+    let formatted_names: string = $names  | each {|name|
+        ((cyan "`") + (ansi blueviolet) + $name + (ansi reset) + (cyan "`"))
+    } | str join (cyan ", ")
+    print ((cyan $verb) + " " + $formatted_names)
 }
