@@ -1,3 +1,4 @@
+#!/usr/bin/env nu
 
 const cargo_packages: list<string> = [
     alacritty # terminal emulator

@@ -1,3 +1,4 @@
+#!/usr/bin/env nu
 
 source utilities.nu
 

@@ -1,4 +1,7 @@
 
+$env.JULIA_EDITOR = "hx"
+$env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE = "eager"
+$env.JULIA_SHELL = "bash"
 $env.PROMPT_COMMAND_RIGHT = ""
 $env.PROMPT_COMMAND = {
     let directory = match (do --ignore-errors {

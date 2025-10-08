@@ -3,12 +3,11 @@ FROM debian:trixie
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /root
+WORKDIR /root/code/projects/configuration
 
-COPY scripts scripts
+COPY . .
 
 RUN scripts/install.sh
-RUN nu scripts/update.nu
-RUN rm --recursive scripts
+# RUN nu scripts/update.nu
 
 CMD ["nu"]

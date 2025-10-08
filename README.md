@@ -4,7 +4,10 @@
 ## Installation
 
 ```sh
-http get https://raw.githubusercontent.com/jakobjpeters/configuration/main/scripts/install.sh | sh
+mkdir --parents $HOME/code/projects
+cd $HOME/code/projects
+git clone --recurse-submodules https://github.com/jakobjpeters/configuration
+scripts/install.sh
 . $HOME/.cargo/env
 nu
 ```
@@ -24,7 +27,8 @@ docker run --interactive --tty configuration
 
 ## To Do
 
-- install beautyline (`.local/share/icons`), just, helix (fix runtime folder), julia, niri, Docker, wallpaper, desktop files
+- install beautyline (`.local/share/icons`), `just`, `niri`, Docker, wallpaper, desktop files
+- fix `helix` runtime folder
 - use `just` to run installation and updating
     - copy output to log files
 - setup SSH
@@ -35,3 +39,4 @@ docker run --interactive --tty configuration
     - https://gist.github.com/MilesCranmer/0b530cf4602905d548acdfb3bb54ded0
 - test
 - debug `tokei` and `tree` colors
+- symlink `update.nu` to `~/.local/bin`
