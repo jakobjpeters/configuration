@@ -13,7 +13,7 @@ $env.PROMPT_COMMAND = {
     }
     let path_color = (if (is-admin) { ansi red_bold } else { ansi green_bold })
     let separator_color = (if (is-admin) { ansi light_red_bold } else { ansi light_green_bold })
-    let path_segment = $"($path_color)($directory)"
+    let path_segment = $"($path_color)($directory)\n"
     let path_seperator = $"($separator_color)(char path_sep)($path_color)"
 
     $path_segment | str replace --all (char path_sep) $path_seperator

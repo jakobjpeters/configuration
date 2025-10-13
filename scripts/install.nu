@@ -3,11 +3,14 @@
 source utilities.nu
 
 const apt_packages: list<string> = [
+    cmatrix # screen saver
     firefox-esr # web browser
     git # version control
+    hyperfine # benchmarking
     libclang-dev # dependency
     libfontconfig1-dev # dependency
     libssl-dev # dependency
+    lolcat # rainbow text
     man # documentation
     pkg-config # dependency
     tree # directory viewer
@@ -27,6 +30,15 @@ let helix: string = $"($clones)/helix"
 
 log Creating $folders
 mkdir ...$folders
+
+for folder in $linked_folders {
+    let path: string = if $folder == julia { ".julia/config" } else { $".config/($folder)" }
+    let source: string = $"($projects)/configuration/programs/($folder)"
+    let target: string = $"($env.HOME)/($path)"
+
+    print $"Linking `($source)` to `($target)`"
+    ln --force --symbolic $source $target
+}
 
 log Installing $apt_packages
 apt install --yes ...$apt_packages
@@ -61,15 +73,6 @@ log Cloning $github_projects
 for github_project in $github_projects {
     let address: string = $"https://github.com/jakobjpeters/($github_project)"
     git -C $projects clone --recurse-submodules $address
-}
-
-for folder in $linked_folders {
-    let path: string = if $folder == julia { ".julia/config" } else { $".config/($folder)" }
-    let source: string = $"($projects)/configuration/programs/($folder)"
-    let target: string = $"($env.HOME)/($path)"
-
-    print $"Linking `($source)` to `($target)`"
-    ln --force --symbolic $source $target
 }
 
 print "Finished installing configuration"

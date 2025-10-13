@@ -14,11 +14,11 @@ const cargo_packages: list<string> = [
     typst-cli # typesetting language
 ]
 
-def cyan [x: string] { (ansi cyan) + $x + (ansi reset) }
+def color [name: string, value: string] { (ansi $name) + $value + (ansi reset) }
 
 def log [verb: string, names: list<string>] {
     let formatted_names: string = $names  | each {|name|
-        ((cyan "`") + (ansi blueviolet) + $name + (ansi reset) + (cyan "`"))
-    } | str join (cyan ", ")
-    print ((cyan $verb) + " " + $formatted_names)
+        ((color blueviolet "`") + (color cyan $name) + (color blueviolet "`"))
+    } | str join (color blueviolet ", ")
+    print ((color cyan $verb) + " " + $formatted_names)
 }
