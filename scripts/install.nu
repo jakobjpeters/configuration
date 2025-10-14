@@ -18,27 +18,23 @@ const apt_packages: list<string> = [
 const github_projects: list<string> = [
     MachineLearning.jl PAndQ.jl Typstry.jl Speculator.jl configuration boids monty_hall
 ]
-const linked_folders: list<string> = [alacritty git helix julia nushell]
+const linked_folders: list<string> = [alacritty git julia nushell]
 const version_keys: list<string> = [major minor patch]
 
-let clones: string = $"($env.HOME)/code/clones"
-let projects: string = $"($env.HOME)/code/projects"
+let clones: string = $"($nu.home-path)/code/clones"
+let projects: string = $"($nu.home-path)/code/projects"
 let folders: list<string> = ([.config .julia data]
-    | each {|folder| $"($env.HOME)/($folder)"}
+    | each {|folder| $"($nu.home-path)/($folder)"}
     | append [$clones $projects])
 let helix: string = $"($clones)/helix"
 
-log Creating $folders
-mkdir ...$folders
-
-for folder in $linked_folders {
-    let path: string = if $folder == julia { ".julia/config" } else { $".config/($folder)" }
-    let source: string = $"($projects)/configuration/programs/($folder)"
-    let target: string = $"($env.HOME)/($path)"
-
+def link [source: string, target: string] {
     print $"Linking `($source)` to `($target)`"
     ln --force --symbolic $source $target
 }
+
+log Creating $folders
+mkdir ...$folders
 
 log Installing $apt_packages
 apt install --yes ...$apt_packages
@@ -73,6 +69,18 @@ log Cloning $github_projects
 for github_project in $github_projects {
     let address: string = $"https://github.com/jakobjpeters/($github_project)"
     git -C $projects clone --recurse-submodules $address
+}
+
+for folder in $linked_folders {
+    let path: string = if $folder == julia { ".julia/config" } else { $".config/($folder)" }
+    link $"($projects)/configuration/programs/($folder)" $"($nu.home-path)/($path)"
+}
+
+for file in ["config.toml" "languages.toml"] {
+    let source: string = $"($projects)/configuration/programs/helix/($file)"
+    let target: string = $"($nu.home-path)/.config/helix"
+
+    link  $source $target
 }
 
 print "Finished installing configuration"

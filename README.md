@@ -4,9 +4,6 @@
 ## Installation
 
 ```sh
-mkdir --parents $HOME/code/projects
-cd $HOME/code/projects
-git clone --recurse-submodules https://github.com/jakobjpeters/configuration
 scripts/install.sh
 scripts/install.nu
 . $HOME/.cargo/env
@@ -22,7 +19,7 @@ scripts/update.nu
 ## Testing
 
 ```nu
-docker build --build-arg HOME=$HOME --tag configuration .
+docker build --build-arg --tag configuration .
 docker run --interactive --tty configuration
 ```
 
@@ -39,10 +36,12 @@ docker run --interactive --tty configuration
 - nushell in Julia shell mode
     - https://gist.github.com/MilesCranmer/0b530cf4602905d548acdfb3bb54ded0
 - test
-- debug `tokei` and `tree` colors
+- debug `tokei` and colors
 - symlink `scripts` to `~/.local/bin`?
-- move `.julia` to `.config/julia`
-- move `.cargo` to `.config/cargo`?
+- move dot folders to `.config`?
+    - `.julia`, `.cargo`, `.rustup`, `.docker`
+- move `.julia` to `.config/julia`?
+- move `.cargo` and `.rustup` to `.config/cargo`?
 - setup screen saver with `cmatrix`
 - command to list installed programs
-- make `nu` the login shell
+- make `nu` the login shell?

@@ -1,6 +1,6 @@
 #!/usr/bin/env nu
 
-let clones: string = $"($env.HOME)/code/clones"
+let clones: string = $"($nu.home-path)/code/clones"
 apt install --yes git
 mkdir $clones
 cd $clones
