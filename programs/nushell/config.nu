@@ -1,5 +1,5 @@
 
-alias j = julia --banner=no --depwarn=yes --threads=auto
+alias j = julia --banner no --depwarn yes --threads auto
 alias tree = tree -C
 
 $env.config = {

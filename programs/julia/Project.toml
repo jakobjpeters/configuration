@@ -1,0 +1,7 @@
+[deps]
+OhMyREPL = "5fb14364-9ced-5910-84b2-373655c76a03"
+Preferences = "21216c6a-2e73-6563-6e65-726566657250"
+REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+Speculator = "ac92255e-d98e-45c4-b636-98964c1c8a8b"
+TerminalPager = "0c614874-6106-40ed-a7c2-2f1cd0bff883"

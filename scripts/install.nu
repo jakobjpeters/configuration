@@ -42,6 +42,9 @@ apt install --yes ...$apt_packages
 log Installing $cargo_packages
 cargo install --locked ...$cargo_packages
 
+log Installing [Julia]
+juliaup add 1
+
 log Installing [Helix]
 
 git -C $clones clone https://github.com/helix-editor/helix
