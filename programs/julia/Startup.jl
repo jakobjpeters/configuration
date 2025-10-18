@@ -7,9 +7,8 @@ A module loaded in `startup.jl`.
 module Startup
 
 import OhMyREPL, Revise, TerminalPager
-using Base: Threads.@spawn
 using Preferences: has_preference, load_preference, set_preferences!
-using REPL: REPLCompletions, LineEdit.refresh_line
+using REPL: REPLCompletions
 using Speculator: install_speculator
 
 export BarCursor, bar_cursor, toggle_precompile_workload
@@ -39,7 +38,7 @@ end
     BarCursor()
     (::BarCursor)(::Any)
 
-Return an expression prepends a call to `bar_cursor` to the input.
+Return an expression which prepends a call to `bar_cursor` to the input.
 
 # Examples
 
@@ -59,37 +58,28 @@ struct BarCursor end
 
 (::BarCursor)(x) = :($bar_cursor(); $x)
 
-function __init__()
-    try
-        bar_cursor()
-        install_speculator(; limit = 2 ^ 8)
+bar_cursor()
+install_speculator(; limit = 2 ^ 8)
 
-        for (key, value) in [
-            :EDITOR => :hx
-            :PKG_PRECOMPILE_AUTO => 0
-            :PKG_SERVER_REGISTRY_PREFERENCE => :eager
-            :SHELL => :bash
-        ]
-            ENV["JULIA_$key"] = value
-        end
-
-        # https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
-        @eval REPLCompletions close_path_completion(_, _, _, _) = false
-
-        _time = time()
-
-        while !isdefined(Base, :active_repl_backend) || isnothing(Base.active_repl_backend)
-            sleep(0.1)
-            time() - _time < 60 || error("timed out waiting for the REPL to load")
-        end
-
-        push!(Base.active_repl_backend.ast_transforms, BarCursor())
-    catch
-        print(stderr, "\r\33[K")
-        @error "`startup.jl` failed"
-        println(current_exceptions())
-        invokelatest(refresh_line, Base.active_repl.mistate)
-    end
+for (key, value) in [
+    :EDITOR => :hx
+    :PKG_PRECOMPILE_AUTO => 0
+    :PKG_SERVER_REGISTRY_PREFERENCE => :eager
+    :SHELL => :bash
+]
+    ENV["JULIA_$key"] = value
 end
 
-end # module
+# https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
+@eval REPLCompletions close_path_completion(_, _, _, _) = false
+
+const _time = time()
+
+while !isdefined(Base, :active_repl_backend) || isnothing(Base.active_repl_backend)
+    sleep(0.1)
+    time() - _time < 0 || error("timed out waiting for the REPL to load")
+end
+
+push!(Base.active_repl_backend.ast_transforms, BarCursor())
+
+end # Startup
