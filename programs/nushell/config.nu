@@ -1,4 +1,5 @@
 
+alias g = git
 alias j = julia --banner no --depwarn yes --threads auto
 alias tree = tree -C
 

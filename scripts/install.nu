@@ -45,6 +45,9 @@ cargo install --locked ...$cargo_packages
 log Installing [Julia]
 juliaup add 1
 
+log Installing [tinymist]
+cargo install --git https://github.com/Myriad-Dreamin/tinymist --locked tinymist-cli
+
 log Installing [Helix]
 
 git -C $clones clone https://github.com/helix-editor/helix

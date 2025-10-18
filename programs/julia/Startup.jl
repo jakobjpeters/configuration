@@ -65,11 +65,12 @@ function __init__()
         install_speculator(; limit = 2 ^ 8)
 
         for (key, value) in [
-            "JULIA_EDITOR" => "hx",
-            "JULIA_PKG_SERVER_REGISTRY_PREFERENCE" => "eager",
-            "JULIA_SHELL" => "bash"
+            :EDITOR => :hx
+            :PKG_PRECOMPILE_AUTO => 0
+            :PKG_SERVER_REGISTRY_PREFERENCE => :eager
+            :SHELL => :bash
         ]
-            ENV[key] = value
+            ENV["JULIA_$key"] = value
         end
 
         # https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
