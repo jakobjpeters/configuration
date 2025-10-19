@@ -3,6 +3,7 @@ $env.JULIA_EDITOR = "hx"
 $env.JULIA_PKG_PRECOMPILE_AUTO = 0
 $env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE = "eager"
 $env.JULIA_SHELL = "bash"
+$env.PATH ++= [$"($nu.home-path)/.cargo/bin" $"($nu.home-path)/.julia/bin"]
 $env.PROMPT_COMMAND_RIGHT = ""
 $env.PROMPT_COMMAND = {
     let directory: string = match (do --ignore-errors {

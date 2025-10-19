@@ -4,6 +4,7 @@
 ## Installation
 
 ```sh
+wget https://github.com/jakobjpeters/configuration/scripts/instantiate.sh | sh
 scripts/install.sh
 scripts/install.nu
 . $HOME/.cargo/env

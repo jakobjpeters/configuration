@@ -6,8 +6,8 @@ const cargo_packages: list<string> = [
     git-delta # pager
     dua-cli # disk usage analyzer
     fd-find # file search
+    hyperfine # benchmarking
     juliaup # programming language
-    macchina # system information
     ouch # compression and decompression
     ripgrep # line search
     tokei # code statistics

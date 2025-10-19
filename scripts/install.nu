@@ -4,9 +4,9 @@ source utilities.nu
 
 const apt_packages: list<string> = [
     cmatrix # screen saver
+    fastfetch # system information
     firefox-esr # web browser
     git # version control
-    hyperfine # benchmarking
     libclang-dev # dependency
     libfontconfig1-dev # dependency
     libssl-dev # dependency
@@ -23,10 +23,10 @@ const version_keys: list<string> = [major minor patch]
 
 let clones: string = $"($nu.home-path)/code/clones"
 let projects: string = $"($nu.home-path)/code/projects"
-let folders: list<string> = ([.config .julia data]
-    | each {|folder| $"($nu.home-path)/($folder)"}
-    | append [$clones $projects])
 let helix: string = $"($clones)/helix"
+let folders: list<string> = ([.config/helix .julia data]
+    | each {|folder| $"($nu.home-path)/($folder)"}
+    | append [$clones $helix $projects])
 
 def link [source: string, target: string] {
     print $"Linking `($source)` to `($target)`"
@@ -60,6 +60,8 @@ let version: string = (git -C $helix tag --list) | split row "\n" | each {
         $info | insert $pair.item ($version_values | get --optional $pair.index | default 0)
     }
 } | sort-by ...($version_keys | each {|key| [$key] | into cell-path }) | last | get version
+
+link $"($helix)/runtime" $"($nu.home-path)/.config/helix/runtime"
 
 git -C $helix checkout $version
 (cargo install

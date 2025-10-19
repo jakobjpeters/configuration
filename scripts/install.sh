@@ -15,3 +15,5 @@ curl --fail --proto '=https' --silent --show-error --tlsv1.2 https://sh.rustup.r
 
 echo Installing \`nu\`
 cargo install --locked nu
+
+$(dirname $0)/install.nu

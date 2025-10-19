@@ -1,16 +1,16 @@
 
-FROM debian:trixie
+FROM debian
 
-ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PATH="${PATH}:/root/.cargo/bin"
 
 WORKDIR /root
 
 COPY scripts scripts
 
 RUN scripts/install.sh
-RUN scripts/install.nu
 RUN nu scripts/update.nu
 # RUN scripts/install_niri.nu
 RUN rm --recursive scripts
 
 CMD ["nu"]
+ENTRYPOINT ["nu", "--commands"]
