@@ -5,10 +5,10 @@ bufferline = "always"
 completion-trigger-len = 1
 completion-timeout = 5
 cursorline = true
-rulers = [100]
+rulers = [101]
 scroll-lines = 4
 shell = ["nu", "--commands"]
-text-width = 99
+text-width = 100
 
 [editor.cursor-shape]
 insert = "bar"

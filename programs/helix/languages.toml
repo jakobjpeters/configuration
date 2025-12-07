@@ -1,20 +1,25 @@
 
 [[language]]
-name = "julia"
 language-servers = []
+name = "julia"
 
 [[grammar]]
 name = "julia"
-source = { git = "https://github.com/tree-sitter/tree-sitter-julia", rev = "a8e1262997d5a45520a06cbe1b86c0737d507054" }
+source = { git = "https://github.com/tree-sitter/tree-sitter-julia", rev = "e0f9dcd180fdcfcfa8d79a3531e11d99e79321d3" }
 
 [[language]]
+indent = { tab-width = 4, unit = "    " }
 name = "markdown"
-indent = { tab-width = 4, unit = "    " }
 
 [[language]]
+name = "rust"
+rulers = []
+text-width = 1000
+
+[[language]]
+indent = { tab-width = 4, unit = "    " }
 name = "toml"
-indent = { tab-width = 4, unit = "    " }
 
 [[language]]
+indent = { tab-width = 4, unit = "    " }
 name = "typst"
-language-servers = ["tinymist"]
