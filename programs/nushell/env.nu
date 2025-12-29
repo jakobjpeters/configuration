@@ -50,5 +50,8 @@ do --env {
     load-env $ssh_agent_env
     $ssh_agent_env | save --force $ssh_agent_file
 
-    ssh-add ~/.ssh/id_ed25519
+    let result = ssh-add ~/.ssh/id_ed25519 | complete
+    if $result.exit_code == 1 {
+        echo $result.stderr
+    }
 }
