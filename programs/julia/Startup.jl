@@ -6,7 +6,6 @@ A module loaded in `startup.jl`.
 """
 module Startup
 
-import OhMyREPL, Revise, TerminalPager
 using Preferences: has_preference, load_preference, set_preferences!
 using REPL: REPLCompletions
 using Speculator: install_speculator
@@ -58,28 +57,32 @@ struct BarCursor end
 
 (::BarCursor)(x) = :($bar_cursor(); $x)
 
-bar_cursor()
-install_speculator(; limit = 2 ^ 8)
+import OhMyREPL, Revise, TerminalPager
 
-for (key, value) in [
-    :EDITOR => :hx
-    :PKG_PRECOMPILE_AUTO => 0
-    :PKG_SERVER_REGISTRY_PREFERENCE => :eager
-    :SHELL => :bash
-]
-    ENV["JULIA_$key"] = value
+function __init__()
+    bar_cursor()
+    install_speculator(; limit = 2 ^ 8)
+
+    for (key, value) in [
+        :EDITOR => :hx
+        :PKG_PRECOMPILE_AUTO => 0
+        :PKG_SERVER_REGISTRY_PREFERENCE => :eager
+        :SHELL => :bash
+    ]
+        ENV["JULIA_$key"] = value
+    end
+
+    # https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
+    @eval REPLCompletions close_path_completion(_, _, _, _) = false
+
+    start_time = time()
+
+    while !isdefined(Base, :active_repl_backend) || isnothing(Base.active_repl_backend)
+        sleep(0.1)
+        time() - start_time < 0 || error("timed out waiting for the REPL to load")
+    end
+
+    push!(Base.active_repl_backend.ast_transforms, BarCursor())
 end
-
-# https://github.com/KristofferC/OhMyREPL.jl/issues/334#issuecomment-2485225896
-@eval REPLCompletions close_path_completion(_, _, _, _) = false
-
-const _time = time()
-
-while !isdefined(Base, :active_repl_backend) || isnothing(Base.active_repl_backend)
-    sleep(0.1)
-    time() - _time < 0 || error("timed out waiting for the REPL to load")
-end
-
-push!(Base.active_repl_backend.ast_transforms, BarCursor())
 
 end # Startup
