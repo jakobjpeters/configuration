@@ -1,10 +1,4 @@
 
-alias b = bat
-alias c = cargo
-alias g = git
-alias tree = tree -C
-alias t = typst
-
 const path = path self
 
 $env.config = {
@@ -15,25 +9,25 @@ $env.config = {
 }
 
 const commands = [[command alias description];
-    [alacritty '' 'Terminal emulator']
+    [alacritty a 'Terminal emulator']
     [bat b 'File reader']
-    [cmatrix '' 'The Matrix themed screen saver']
     [cargo c 'The Cargo package manager']
+    [cmatrix '' 'The Matrix themed screen saver']
     [delta '' 'Multi-purpose viewer']
-    [dua '' 'Disk usage analyzer']
+    [dua d 'Disk usage analyzer']
     [fd '' 'File search']
-    [firefox '' 'Web browser']
+    [firefox f 'Web browser']
     [fzf '' 'Fuzzy finder']
     [git g 'The Git version control system']
-    [hyperfine '' 'Benchmarking']
-    [idle '' 'Activate a screen saver']
+    [hyperfine h 'Benchmarking']
+    [idle i 'Activate a screen saver']
     [juliaup '' 'The Julia version manager']
     [julia j 'The Julia programming language']
     [just '' 'Command runner']
-    [lock '' 'Activate a screen saver and lock the screen']
+    [lock l 'Activate a screen saver and lock the screen']
     [lolcat '' 'Rainbow text']
-    [ouch '' 'Compression and decompression']
-    [re '' 'Search files']
+    [ouch o 'Compression and decompression']
+    [regex r 'Search files']
     [rga '' 'The ripgrep-all file searcher']
     [rg '' 'The ripgrep file searcher']
     [rustup '' 'Rust version manager']
@@ -64,7 +58,7 @@ def lock []: nothing -> nothing {
 }
 
 # Search files with syntax highlighting and paging
-def re --wrapped [...parameters: string] {
+def regex --wrapped [...parameters: string] {
     rga --json ...$parameters | delta
 }
 
@@ -96,6 +90,20 @@ def --env --wrapped z [...parameters: string] {
 }
 
 hide screen_saver
+
+alias a = alacritty
+alias b = bat
+alias c = cargo
+alias d = dua
+alias f = firefox
+alias g = git
+alias h = hyperfine
+alias i = idle
+alias l = lock
+alias o = ouch
+alias r = regex
+alias tree = tree -C
+alias t = typst
 
 # let tinymist_completions = mktemp
 # tinymist completion nushell | save $tinymist_completions

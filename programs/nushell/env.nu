@@ -27,12 +27,10 @@ $env.PROMPT_COMMAND = {
 $env.SHELL = 'nu'
 
 do --env {
-    let ssh_agent_file = (
-        $nu.temp-path | path join $"ssh-agent-($env.USER).nuon"
-    )
+    let ssh_agent_file = $nu.temp-path | path join $"ssh-agent-($env.USER).nuon"
 
     if ($ssh_agent_file | path exists) {
-        let ssh_agent_env = open ($ssh_agent_file)
+        let ssh_agent_env = open $ssh_agent_file
         if ($"/proc/($ssh_agent_env.SSH_AGENT_PID)" | path exists) {
             load-env $ssh_agent_env
             return
