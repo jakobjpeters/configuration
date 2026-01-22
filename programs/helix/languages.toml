@@ -1,7 +1,12 @@
 
 [[language]]
-language-servers = []
+language-servers = ["jetls"]
 name = "julia"
+
+[language-server.jetls]
+args = ["--threads auto", "--"]
+command = "jetls"
+timeout = 60
 
 [[grammar]]
 name = "julia"

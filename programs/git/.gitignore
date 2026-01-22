@@ -1,3 +1,4 @@
 
 ignore/
-Manifest.toml
+.JETLSConfig.toml
+Manifest*.toml

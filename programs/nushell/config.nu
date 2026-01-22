@@ -13,6 +13,7 @@ const commands = [[command alias description];
     [bat b 'File reader']
     [cargo c 'The Cargo package manager']
     [cmatrix '' 'The Matrix themed screen saver']
+    [configure_jetls '' 'Configure JETLS.jl']
     [delta '' 'Multi-purpose viewer']
     [dua d 'Disk usage analyzer']
     [fd '' 'File search']
@@ -39,6 +40,12 @@ const commands = [[command alias description];
     [zi '' 'Change directories interactively']
     [zoxide '' 'Change directories backend']
 ]
+
+# Create a symlink from the current directory to `configuration/programs/julia/.JETLSConfig.toml`
+def configure_jetls []: nothing -> nothing {
+    let target: string = dirname (dirname $path | path expand) | path join julia .JETLSConfig.toml
+    ln --force --symbolic $target .
+}
 
 # Open a The Matrix and rainbow themed screen saver in a new window
 def idle []: nothing -> nothing {
