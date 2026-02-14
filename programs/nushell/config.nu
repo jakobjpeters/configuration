@@ -28,6 +28,7 @@ const commands = [[command alias description];
     [lock l 'Activate a screen saver and lock the screen']
     [lolcat '' 'Rainbow text']
     [ouch o 'Compression and decompression']
+    [protonvpn p 'Proton VPN']
     [regex r 'Search files']
     [rga '' 'The ripgrep-all file searcher']
     [rg '' 'The ripgrep file searcher']
@@ -108,6 +109,7 @@ alias h = hyperfine
 alias i = idle
 alias l = lock
 alias o = ouch
+alias p = protonvpn
 alias r = regex
 alias tree = tree -C
 alias t = typst
