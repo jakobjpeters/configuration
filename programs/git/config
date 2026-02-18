@@ -1,25 +1,59 @@
+[branch]
+    sort = -committerdate
+# [color "branch"]
+#     current = magenta
+#     local = default
+#     remote = yellow
+#     upstream = green
+#     plain = blue
+[color]
+    branch = true
 [commit]
+    # gpgSign = true
     verbose = true
 [core]
     autocrlf = input
     editor = hx
     excludesfile = /home/jakob/.config/git/.gitignore
     pager = delta
+    whitespace = error
 [credential]
+    # TODO: use SSH and disable this
     helper = store
 [delta]
     hyperlinks = true
     line-numbers = true
     navigate = true
     side-by-side = true
+[diff]
+    renames = copy
+[format]
+    pretty = format:%s%n%C(magenta)%h%C(auto)%d%n%C(cyan)%aN %C(yellow)(%C(cyan)%aE%C(yellow))%n%C(green)%ad%n%C(reset)
 [init]
     defaultBranch = main
 [interactive]
     diffFilter = delta --color-only
+[log]
+    abbrevCommit = true
+    date = format:%Y-%m-%d %H:%M:%S
 [merge]
     conflictStyle = zdiff3
+[pull]
+    autostash = true
 [push]
     autoSetupRemote = true
+    followTags = true
+[rebase]
+    missingCommitsCheck = warn
+[status]
+    branch = true
+    short = true
+    showUntrackedFiles = all
+[tag]
+    sort = -taggerdate
+[url "git@github.com:jakobjpeters/"]
+    insteadOf = "jakob:"
 [user]
     email = jakobj.peters@gmail.com
     name = Jakob Peters
+    # signingkey =
