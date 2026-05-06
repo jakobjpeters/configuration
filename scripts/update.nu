@@ -11,7 +11,7 @@ log Updating [Julia Rust]
 juliaup update
 rustup update
 
-log Updating $cargo_packages
+log Updating ...$cargo_packages
 cargo install --locked ...$cargo_packages
 
 # TODO: update Helix

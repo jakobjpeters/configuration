@@ -1,15 +1,17 @@
 
-FROM debian
-
-ENV PATH="${PATH}:/root/.cargo/bin"
+# TODO: reproducibly install Rust
+FROM rust
 
 WORKDIR /root
 
-COPY scripts scripts
+# prevent cache invalidation from other scripts
+COPY scripts/install/nu.sh scripts/install/nu.sh
+RUN scripts/install/nu.sh
 
-RUN scripts/install.sh
-RUN nu scripts/update.nu
-# RUN scripts/install_niri.nu
+ARG NAME
+
+COPY scripts scripts
+RUN nu scripts/install/$NAME.nu
 RUN rm --recursive scripts
 
 CMD ["nu"]

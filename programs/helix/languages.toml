@@ -1,6 +1,7 @@
 
 [[language]]
-language-servers = ["jetls"]
+# language-servers = ["jetls"]
+language-servers = []
 name = "julia"
 
 [language-server.jetls]

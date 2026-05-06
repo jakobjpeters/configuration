@@ -27,6 +27,7 @@ docker run --interactive --tty configuration
 ## To Do
 
 - install `ruff` and `uv`
+- install `prek`?
 - install beautyline (`.local/share/icons`), `niri`, Docker, wallpaper, desktop files
 - fix `helix` runtime folder
 - use `just` to run installation and updating
@@ -55,3 +56,7 @@ docker run --interactive --tty configuration
 - install JETLS.jl and TestRunner.jl
 - move the `Manifest*.toml` in `git/.gitignore` to specific projects
 - protonvpn
+- keymap (zsa)?
+- `just --completions nushell`
+- install `ouch` completions
+- check current programs for completions

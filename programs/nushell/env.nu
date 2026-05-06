@@ -5,11 +5,11 @@ $env.JULIA_NUM_THREADS = 'auto'
 $env.JULIA_PKG_PRECOMPILE_AUTO = 0
 $env.JULIA_PKG_SERVER_REGISTRY_PREFERENCE = 'eager'
 $env.JULIA_SHELL = 'bash'
-$env.PATH ++= [$"($nu.home-path)/.cargo/bin" $"($nu.home-path)/.julia/bin"]
+$env.PATH ++= [$"($env.HOME)/.cargo/bin" $"($env.HOME)/.julia/bin"]
 $env.PROMPT_COMMAND_RIGHT = ''
 $env.PROMPT_COMMAND = {
     let directory: string = match (do --ignore-errors {
-        $env.PWD | path relative-to $nu.home-path
+        $env.PWD | path relative-to $env.HOME
     }) {
         null => $env.PWD
         '' => '~'
@@ -27,7 +27,7 @@ $env.PROMPT_COMMAND = {
 $env.SHELL = 'nu'
 
 do --env {
-    let ssh_agent_file = $nu.temp-path | path join $"ssh-agent-($env.USER).nuon"
+    let ssh_agent_file = $nu.temp-dir | path join $"ssh-agent-($env.USER).nuon"
 
     if ($ssh_agent_file | path exists) {
         let ssh_agent_env = open $ssh_agent_file

@@ -50,7 +50,7 @@ def configure_jetls []: nothing -> nothing {
 
 # Open a The Matrix and rainbow themed screen saver in a new window
 def idle []: nothing -> nothing {
-    job spawn --tag idle { screen_saver }
+    job spawn --description idle { screen_saver }
     null
 }
 
