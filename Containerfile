@@ -1,12 +1,15 @@
 
-# TODO: reproducibly install Rust
-FROM rust
+FROM debian
 
-WORKDIR /root
+ARG HOME=/root
+
+ENV PATH="${PATH}:${HOME}/.cargo/bin"
+
+WORKDIR ${HOME}
 
 # prevent cache invalidation from other scripts
-COPY scripts/install_nu.sh scripts/
-RUN scripts/install_nu.sh
+COPY scripts/install.sh scripts/
+RUN scripts/install.sh
 
 ARG NAME
 

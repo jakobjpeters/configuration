@@ -26,9 +26,10 @@ docker run --interactive --tty configuration
 
 ## To Do
 
+- switch from firefox --> icecat
 - install `ruff` and `uv`
 - install `prek`?
-- install beautyline (`.local/share/icons`), `niri`, Docker (Podman?), wallpaper, desktop files
+- install beautyline (`.local/share/icons`), `niri`, wallpaper, desktop files
 - fix `helix` runtime folder
 - use `just` to run installation and updating
     - copy output to log files
@@ -41,7 +42,7 @@ docker run --interactive --tty configuration
 - debug `tokei` colors
 - symlink `scripts` to `~/.local/bin`?
 - move dot folders to `.config`?
-    - `.julia`, `.cargo`, `.rustup`, `.docker`
+    - `.julia`, `.cargo`, `.rustup`
 - move `.julia` to `.config/julia`?
 - move `.cargo` and `.rustup` to `.config/cargo`?
 - setup automatic screen saver and lock

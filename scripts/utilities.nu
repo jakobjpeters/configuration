@@ -25,6 +25,7 @@ const apt_packages: list<string> = [
     lolcat # rainbow text
     man # documentation
     # pkg-config # dependency
+    podman # container manager
     tree # directory viewer
 ]
 const cargo_packages: list<string> = [

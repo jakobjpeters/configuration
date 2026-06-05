@@ -3,7 +3,7 @@ set shell := ["nu", "--commands"]
 
 # build Docker image
 build name="all":
-    sudo docker buildx build --build-arg NAME={{name}} --tag configuration_{{name}} .
+    podman build --build-arg NAME={{name}} --tag configuration_{{name}} .
 
 # install the given program(s)
 install name="all":
@@ -11,7 +11,7 @@ install name="all":
 
 # run Docker image shell
 run name="all":
-    sudo docker run --interactive --tty configuration_{{name}}
+    podman run --interactive --tty configuration_{{name}}
 
 #
 test filter="all":
