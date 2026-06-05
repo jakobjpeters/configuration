@@ -4,8 +4,8 @@ print "Updating configuration"
 source utilities.nu
 
 print "Updating `apt` packages"
-apt update
-apt upgrade
+sudo apt update
+sudo apt upgrade
 
 log Updating [Julia Rust]
 juliaup update

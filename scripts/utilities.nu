@@ -19,6 +19,7 @@ const apt_packages: list<string> = [
     firefox-esr # web browser
     fzf # fuzzy finder
     git # version control
+    gpg # dependency
     libclang-dev # dependency
     # libfontconfig1-dev # dependency
     # libssl-dev # dependency
@@ -54,8 +55,7 @@ def install [...names: string] {
 
     for $name in $names {
         if $name in $apt_packages {
-            apt update
-            apt install --yes $name
+            sudo apt install --yes $name
         } else if $name in $cargo_packages {
             cargo install --locked $name
         } else {

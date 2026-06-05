@@ -1,19 +1,27 @@
 
 FROM debian
 
-ARG HOME=/root
+ARG USER=container
 
-ENV PATH="${PATH}:${HOME}/.cargo/bin"
+ENV PATH="${PATH}:/home/${USER}/.cargo/bin"
 
-WORKDIR ${HOME}
+RUN apt update
+RUN apt install --yes sudo
+RUN echo "${USER} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN groupadd --gid 1000 ${USER}
+RUN useradd --uid 1000 --gid ${USER} --create-home --shell /bin/bash ${USER}
+
+WORKDIR /home/${USER}
+
+USER ${USER}
 
 # prevent cache invalidation from other scripts
-COPY scripts/install.sh scripts/
+COPY --chown=${USER} scripts/install.sh scripts/
 RUN scripts/install.sh
 
 ARG NAME
 
-COPY scripts scripts
+COPY --chown=${USER} scripts scripts
 RUN nu scripts/install/$NAME.nu
 RUN rm --recursive scripts
 
