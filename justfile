@@ -14,8 +14,8 @@ run name="all":
     sudo docker run --interactive --tty configuration_{{name}}
 
 #
-test name="all":
-    nu scripts/test.nu {{name}}
+test filter="all":
+    nu scripts/test.nu {{filter}}
 
 # update dependencies
 update:

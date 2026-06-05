@@ -28,7 +28,7 @@ docker run --interactive --tty configuration
 
 - install `ruff` and `uv`
 - install `prek`?
-- install beautyline (`.local/share/icons`), `niri`, Docker, wallpaper, desktop files
+- install beautyline (`.local/share/icons`), `niri`, Docker (Podman?), wallpaper, desktop files
 - fix `helix` runtime folder
 - use `just` to run installation and updating
     - copy output to log files
@@ -60,3 +60,4 @@ docker run --interactive --tty configuration
 - `just --completions nushell`
 - install `ouch` completions
 - check current programs for completions
+    - helix

@@ -18,13 +18,14 @@ let version: string = (git -C $helix tag --list) | split row "\n" | each {
 link $"($helix)/runtime" $helix_target
 
 git -C $helix checkout $version
+$env.HELIX_DISABLE_AUTO_GRAMMAR_BUILD = true # TODO: remove this
 (cargo install
    --profile opt
    --config 'build.rustflags="-C target-cpu=native"'
    --path $"($helix)/helix-term"
    --locked)
 
-# TODO
+# TODO: fix and remove
 # hx --grammar fetch
 # hx --grammar build
 

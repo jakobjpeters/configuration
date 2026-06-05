@@ -13,12 +13,13 @@ let folders: list<string> = ([.config/helix .julia data]
     | append [$clones $helix $projects])
 
 const apt_packages: list<string> = [
+    cmake # dependency
     cmatrix # screen saver
     fastfetch # system information
     firefox-esr # web browser
     fzf # fuzzy finder
     git # version control
-    # libclang-dev # dependency of Rust
+    libclang-dev # dependency
     # libfontconfig1-dev # dependency
     # libssl-dev # dependency
     lolcat # rainbow text
@@ -45,7 +46,7 @@ const cargo_packages: list<string> = [
 
 def color [name: string, value: string] { (ansi $name) + $value + (ansi reset) }
 
-def depend [...names: string] { install ...(names | where {|name| which $name | is-empty}) }
+def depend [...names: string] { install ...($names | where {|name| which $name | is-empty}) }
 
 def install [...names: string] {
     log Installing ...$names

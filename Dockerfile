@@ -5,8 +5,8 @@ FROM rust
 WORKDIR /root
 
 # prevent cache invalidation from other scripts
-COPY scripts/install/nu.sh scripts/install/nu.sh
-RUN scripts/install/nu.sh
+COPY scripts/install_nu.sh scripts/
+RUN scripts/install_nu.sh
 
 ARG NAME
 
