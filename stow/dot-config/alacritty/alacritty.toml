@@ -1,0 +1,21 @@
+
+[window]
+decorations = "None"
+opacity = 0.8
+startup_mode = "Maximized"
+
+[scrolling]
+history = 100000
+multiplier = 4
+
+[font]
+size = 16
+
+[selection]
+save_to_clipboard = true
+
+[general]
+import = ["~/.config/alacritty/alacritty-theme/themes/blood_moon.toml"]
+
+[terminal]
+shell = "nu"

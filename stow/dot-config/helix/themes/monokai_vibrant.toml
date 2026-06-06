@@ -1,0 +1,192 @@
+
+inherits = "onedark"
+
+# Adapted from Monokai Vibrant by Dylan Marsh
+# https://github.com/dylantmarsh/monokai-vibrant/blob/d916342737078ed2ecaeebb12d36ee486eb6461a/themes/Monokai%20Vibrant-color-theme.json
+
+# Adapted by Jakob Peters
+# https://github.com/jakobjpeters
+
+'attribute' = { fg = "#81F900" } # 221
+
+# 'type' = { } # 138 or 235?
+# 'type.builtin' = { }
+# 'type.parameter' = { }
+# 'type.enum' = { }
+# 'type.enum.variant' = { }
+
+# 'constructor' = { }
+
+# 'constant' = { }
+'constant.builtin' = { fg = "#E373CE" } # 70
+# 'constant.builtin.boolean' = { }
+'constant.character' = { fg = "#E373CE" } # 77
+# 'constant.character.escape' = { }
+'constant.numeric' = { fg = "#E373CE" } # 49
+# 'constant.numeric.integer' = { }
+# 'constant.numeric.float' = { }
+
+'string' = { fg = "#FFD945" } # 21
+# 'string.regexp' = { }
+# 'string.special' = { }
+# 'string.special.path' = { }
+# 'string.special.url' = { }
+# 'string.special.symbol' = { }
+
+'comment' = { fg = "#5c6370", modifiers = ["italic"] } # 13
+# 'comment.line' = { }
+# 'comment.block' = { }
+# 'comment.block.documentation' = { }
+
+# 'variable' = { } # 145, 152, 235, or 497?
+'variable.builtin' = { fg = "#FF3F4F", modifiers = ["italic"] } # 84
+'variable.parameters' = { fg = "#FF9700", modifiers = ["italic"] } # 181
+# 'variable.other' = { } # 145 or 152?
+# 'variable.other.member' = { }
+
+# 'label' = { }
+
+# 'punctuation' = { }
+# 'punctuation.delimiter' = { }
+# 'punctuation.bracket' = { }
+# 'punctuation.special' = { }
+
+'keyword' = { fg = "#FF3F4F" } # 103
+# 'keyword.control' = { }
+# 'keyword.control.conditional' = { }
+# 'keyword.control.repeat' = { }
+# 'keyword.control.import' = { }
+# 'keyword.control.return' = { }
+# 'keyword.control.exception' = { }
+'keyword.operator' = { fg = "#FF3F4F" } # 110
+# 'keyword.directive' = { }
+# 'keyword.function' = { }
+'keyword.storage' = { fg = "#FF3F4F", modifiers = ["italic"] } # 117
+'keyword.storage.type' = { fg = "#19D1E5" } # 125
+# 'keyword.storage.modifier' = { }
+
+# 'operator' = { }
+
+# 'function' = { } # 166, 174, or 189?
+'function.builtin' = { fg = "#81F900" } # 196
+# 'function.method' = { }
+# 'function.macro' = { }
+# 'function.special' = { }
+
+# 'tag' = { } # 207 or 214?
+# 'tag.builtin' = { }
+
+# 'namespace' = { }
+
+# 'special' = { }
+
+# 'markup' = { }
+'markup.heading' = { fg = "#FF3F4F", modifiers = ["bold"] } # 440
+# 'markup.heading.marker' = { }
+# 'markup.heading.1' = { }
+# 'markup.heading.2' = { }
+# 'markup.heading.3' = { }
+# 'markup.heading.4' = { }
+# 'markup.heading.5' = { }
+# 'markup.heading.6' = { }
+'markup.list' = { fg = "#ffffff", modifiers = ["bold"] } # 478
+# 'markup.list.unnumbered' = { }
+# 'markup.list.numbered' = { }
+# 'markup.list.unchecked' = { }
+'markup.bold' = { modifiers = ["bold"] } # 425
+'markup.italic' = { modifiers = ["italic"] } # 403
+# 'markup.strikethrough' = { }
+'markup.link' = { fg = "#00a0e4" } # 356, 418
+# 'markup.link.url' = { }
+# 'markup.link.label' = { }
+# 'markup.link.text' = { }
+'markup.quote' = { fg = "#6FD80D" } # 456
+'markup.raw' = { fg = "#56b6c2" } # 471
+'markup.raw.inline' = { fg = "#56b6c2" } # 471
+'markup.raw.block' = { fg = "#56b6c2" } # 471
+
+# 'diff' = { }
+'diff.plus' = { fg = "#e5c07b" } # 377
+# 'diff.plus.gutter' = { }
+'diff.minus' = { fg = "#E542FF" } # 370
+# 'diff.minus.gutter' = { }
+'diff.delta' = { fg = "#e5c07b" } # 384
+# 'diff.delta.moved' = { }
+# 'diff.delta.gutter' = { }
+
+# # 'markup' = { }
+# 'markup.normal' = { }
+# 'markup.normal.completion' = { }
+# 'markup.normal.hover' = { }
+# 'markup.heading' = { fg = "#FF3F4F", modifiers = ["bold"] } # 440
+# 'markup.heading.completion' = { }
+# 'markup.heading.hover' = { }
+# # 'markup.raw' = { }
+# # 'markup.raw.inline' = { }
+# 'markup.raw.inline.completion' = { }
+# 'markup.raw.inline.hover' = { }
+
+'ui.background' = { bg = "#16171D" } # 510
+'ui.background.separator' = { fg = "#E542FF", modifiers = ["bold"] } # 463
+'ui.cursor' = { fg = "#f8f8f0" } # 516
+# 'ui.cursor.normal' = { }
+# 'ui.cursor.insert' = { }
+# 'ui.cursor.select' = { }
+# 'ui.cursor.match' = { }
+# 'ui.cursor.primary' = { }
+# 'ui.cursor.primary.normal' = { }
+# 'ui.cursor.primary.insert' = { }
+# 'ui.cursor.primary.select' = { }
+# 'ui.debug.breakpoint' = { }
+# 'ui.debug.active' = { }
+# 'ui.gutter' = { }
+# 'ui.gutter.selected' = { }
+# 'ui.highlight.frameline' = { }
+'ui.linenr' = { fg = "#495162" } # 522
+# 'ui.linenr.selected' = { }
+'ui.statusline' = { fg = "#fff", bg = "#1b1c23" } # 543 & 544
+# 'ui.statusline.inactive' = { }
+# 'ui.statusline.normal' = { }
+# 'ui.statusline.insert' = { }
+# 'ui.statusline.select' = { }
+# 'ui.statusline.separator' = { }
+# 'ui.bufferline' = { }
+# 'ui.bufferline.active' = { }
+# 'ui.bufferline.background' = { }
+# 'ui.popup' = { }
+# 'ui.popup.info' = { }
+# 'ui.window' = { }
+# 'ui.help' = { }
+# 'ui.text' = { }
+# 'ui.text.focus' = { }
+# 'ui.text.inactive' = { }
+# 'ui.text.info' = { }
+# 'ui.virtual.ruler' = { }
+# 'ui.virtual.whitespace' = { }
+# 'ui.virtual.indent-guide' = { }
+# 'ui.virtual.inlay-hint' = { }
+# 'ui.virtual.inlay-hint.parameter' = { }
+# 'ui.virtual.inlay-hint.type' = { }
+# 'ui.virtual.wrap' = { }
+# 'ui.virtual.jump-label' = { }
+# 'ui.menu' = { }
+# 'ui.menu.selected' = { }
+# 'ui.menu.scroll' = { } # 538, 539, & 540?
+# 'ui.selection' = { }
+# 'ui.selection.primary' = { }
+# 'ui.highlight' = { }
+# 'ui.cursorline.primary' = { }
+# 'ui.cursorline.secondary' = { }
+# 'ui.cursorcolumn.primary' = { }
+# 'ui.cursorcolumn.secondary' = { }
+# 'warning' = { }
+# 'error' = { }
+# 'info' = { }
+# 'hint' = { }
+# 'diagnostic' = { }
+# 'diagnostic.hint' = { }
+# 'diagnostic.info' = { }
+# 'diagnostic.warning' = { }
+# 'diagnostic.error' = { }
+# 'diagnostic.unnecessary' = { }
+# 'diagnostic.deprecated' = { }

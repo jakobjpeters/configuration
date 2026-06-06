@@ -1,0 +1,31 @@
+
+[[language]]
+# language-servers = ["jetls"]
+language-servers = []
+name = "julia"
+
+[language-server.jetls]
+args = ["--threads auto", "--"]
+command = "jetls"
+timeout = 60
+
+[[grammar]]
+name = "julia"
+source = { git = "https://github.com/tree-sitter/tree-sitter-julia", rev = "e0f9dcd180fdcfcfa8d79a3531e11d99e79321d3" }
+
+[[language]]
+indent = { tab-width = 4, unit = "    " }
+name = "markdown"
+
+[[language]]
+name = "rust"
+rulers = []
+text-width = 1000
+
+[[language]]
+indent = { tab-width = 4, unit = "    " }
+name = "toml"
+
+[[language]]
+indent = { tab-width = 4, unit = "    " }
+name = "typst"

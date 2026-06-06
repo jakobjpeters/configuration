@@ -21,9 +21,10 @@ RUN scripts/install.sh
 
 ARG NAME
 
-COPY --chown=${USER} scripts scripts
-RUN nu scripts/install/$NAME.nu
-RUN rm --recursive scripts
+COPY --chown=${USER} . code/projects/configuration/
+
+RUN nu code/projects/configuration/scripts/setup.nu
+RUN nu code/projects/configuration/scripts/install/$NAME.nu
 
 CMD ["nu"]
 ENTRYPOINT ["nu", "--commands"]

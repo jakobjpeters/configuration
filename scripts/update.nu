@@ -1,4 +1,6 @@
 
+#!/usr/bin/env nu
+
 print "Updating configuration"
 
 source utilities.nu

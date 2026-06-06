@@ -1,6 +1,10 @@
 
 source ../utilities.nu
 
+const version_keys: list<string> = [major minor patch]
+
+let helix: string = $"($clones)/helix"
+
 let helix_target = $"($env.HOME)/.config/helix"
 mkdir $clones $helix_target
 

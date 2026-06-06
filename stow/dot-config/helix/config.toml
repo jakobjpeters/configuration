@@ -1,0 +1,43 @@
+theme = "onedark"
+
+[editor]
+bufferline = "always"
+completion-trigger-len = 1
+completion-timeout = 5
+cursorline = true
+rulers = [101]
+scroll-lines = 4
+shell = ["nu", "--commands"]
+text-width = 100
+
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-inlay-hints = true
+
+[editor.search]
+smart-case = false
+
+[editor.soft-wrap]
+enable = true
+wrap-at-text-width = true
+
+[editor.statusline]
+center = ["version-control"]
+left = ["file-name"]
+right = ["mode"]
+
+[editor.statusline.mode]
+insert = "INSERT"
+normal = "NORMAL"
+select = "SELECT"
+
+[editor.whitespace.render]
+nbsp = "all"
+nnbsp = "all"
+space = "all"
+tab = "all"

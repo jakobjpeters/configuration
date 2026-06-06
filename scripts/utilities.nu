@@ -1,16 +1,7 @@
 
-const github_projects: list<string> = [
-    MachineLearning.jl PAndQ.jl Typstry.jl Speculator.jl configuration boids monty_hall
-]
-const linked_folders: list<string> = [alacritty git julia nushell]
-const version_keys: list<string> = [major minor patch]
-
-let clones: string = $"($env.HOME)/code/clones"
-let projects: string = $"($env.HOME)/code/projects"
-let helix: string = $"($clones)/helix"
-let folders: list<string> = ([.config/helix .julia data]
-    | each {|folder| $"($env.HOME)/($folder)"}
-    | append [$clones $helix $projects])
+let code: string = $"($env.HOME)/code"
+let clones: string = $"($code)/clones"
+let projects: string = $"($code)/projects"
 
 const apt_packages: list<string> = [
     cmake # dependency
@@ -27,6 +18,7 @@ const apt_packages: list<string> = [
     man # documentation
     # pkg-config # dependency
     podman # container manager
+    stow # symbolic link manager
     tree # directory viewer
 ]
 const cargo_packages: list<string> = [

@@ -1,4 +1,6 @@
 
+#!/usr/bin/env nu
+
 def main [filter: string] {
     let timed = timeit --output {(
         if $filter == all {
