@@ -26,6 +26,21 @@ docker run --interactive --tty configuration
 
 ## To Do
 
+- https://github.com/chmln/sd
+- https://github.com/ms-jpq/sad
+- https://github.com/ClementTsang/bottom
+- replace fzf with skim
+    - https://github.com/ajeetdsouza/zoxide/issues/228
+- remove `fd` in favor of built-in Nu commands?
+- https://github.com/uutils/coreutils
+- https://github.com/yamafaktory/jql
+- https://github.com/redlib-org/redlib
+- https://github.com/Canop/broot
+- https://github.com/sxyazi/yazi
+- choose a font
+    - https://www.nerdfonts.com/font-downloads
+    - https://www.programmingfonts.org
+- adjust `XDG_CONFIG_HOME = configuration` and related variables
 - switch from firefox --> icecat
 - install `ruff` and `uv`
 - install `prek`?
